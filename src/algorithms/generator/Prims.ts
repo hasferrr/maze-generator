@@ -12,7 +12,6 @@ export const prim = (grid: number[][]): number[][] => {
   ]
 
   const frontiers: [number, number][] = []
-  const passages: boolean[][] = Array.from({ length: ROWS }, () => Array(COLS))
 
   const getNeighbors = (x: number, y: number) => {
     const frontierNeighbors: [number, number][] = []
@@ -23,11 +22,14 @@ export const prim = (grid: number[][]): number[][] => {
       if (nx <= 0 || ny <= 0 || nx >= ROWS - 1 || ny >= COLS - 1) {
         continue
       }
-      if (passages[nx][ny]) {
+      if (grid[nx][ny] === 1) {
         passageNeighbors.push([nx, ny])
         continue
       }
-      frontierNeighbors.push([nx, ny])
+      if (grid[nx][ny] === 0) {
+        frontierNeighbors.push([nx, ny])
+        continue
+      }
     }
     return [frontierNeighbors, passageNeighbors]
   }
@@ -47,7 +49,7 @@ export const prim = (grid: number[][]): number[][] => {
     Math.floor(Math.random() * rows) * 2 + 1,
     Math.floor(Math.random() * cols) * 2 + 1,
   ]
-  passages[x][y] = true
+  grid[x][y] = 1
   const [frontierNeighbors] = getNeighbors(x, y)
   pushValidFrontiers(frontierNeighbors)
 
@@ -55,7 +57,6 @@ export const prim = (grid: number[][]): number[][] => {
     // pick one frontier randomly
     const randIndex = Math.floor(Math.random() * frontiers.length)
     const [x, y] = frontiers[randIndex]
-    passages[x][y] = true
     grid[x][y] = 1
 
     // get and push all valid neighbors
@@ -70,6 +71,7 @@ export const prim = (grid: number[][]): number[][] => {
     }
 
     // break wall between the current frontier and the random passageNeighbors
+    if (!passageNeighbors.length) continue
     const randPassage = Math.floor(Math.random() * passageNeighbors.length)
     const [nx, ny] = passageNeighbors[randPassage]
     const wallX = (x + nx) / 2
