@@ -1,15 +1,12 @@
 import { prim } from '../algorithms/generator/Prims'
-import { useGrid, useSetGrid } from '../contexts/GridExport'
+import { useSetGrid, useSize } from '../contexts/GridExport'
+import { createEmptyGrid } from '../helpers/createGrid'
 
 const Button = () => {
-  const grid = useGrid()
+  const [rows, cols] = useSize()
   const setGrid = useSetGrid()
   const handleGenerate = () => {
-    const copyGrid: number[][] = Array(grid.length)
-    for (let i = 0; i < copyGrid.length; i++) {
-      copyGrid[i] = [...grid[i]]
-    }
-    setGrid(prim(copyGrid))
+    setGrid(prim(createEmptyGrid(rows, cols)))
   }
   return (
     <div>
