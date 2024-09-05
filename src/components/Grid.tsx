@@ -3,6 +3,7 @@ import { useGrid } from '../contexts/GridExport'
 const gridColor = [
   'bg-[#333333]',
   'bg-cyan-600',
+  'bg-cyan-900',
   'bg-emerald-400',
 ]
 
