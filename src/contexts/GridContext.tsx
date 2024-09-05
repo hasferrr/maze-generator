@@ -1,5 +1,5 @@
 import { createContext, useState } from 'react'
-import { createEmptyGrid } from '../helpers/createGrid'
+import { createWallGrid } from '../helpers/createGrid'
 
 interface GridContextType {
   grid: number[][]
@@ -12,7 +12,7 @@ const GridContext = createContext<GridContextType>(null!)
 
 export const GridContextProvider = ({ children }: { children?: React.ReactNode }) => {
   const [size, setSize] = useState<[number, number]>([16, 32])
-  const [grid, setGrid] = useState<number[][]>(createEmptyGrid(size[0], size[1]))
+  const [grid, setGrid] = useState<number[][]>(createWallGrid(size[0], size[1]))
 
   return (
     <GridContext.Provider value={{ grid, setGrid, size, setSize }}>

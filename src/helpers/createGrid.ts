@@ -1,4 +1,10 @@
-export const createEmptyGrid = (rows: number, cols: number): number[][] => {
+export const createPathGrid = (rows: number, cols: number): number[][] => {
+  rows = rows * 2 + 1
+  cols = cols * 2 + 1
+  return Array.from({ length: rows }, () => Array(cols).fill(1))
+}
+
+export const createWallGrid = (rows: number, cols: number): number[][] => {
   rows = rows * 2 + 1
   cols = cols * 2 + 1
   return Array.from({ length: rows }, () => Array(cols).fill(0))
