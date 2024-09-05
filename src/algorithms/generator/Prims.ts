@@ -1,55 +1,77 @@
+/**
+ * Prim's algorithm maze with marking of:
+ * - paths (1s)
+ * - walls (0s)
+ * - frontiers (2s)
+ */
 export const prim = (grid: number[][]): number[][] => {
   const ROWS = grid.length
   const COLS = grid[0].length
-
-  const rows = (ROWS - 1) / 2
-  const cols = (COLS - 1) / 2
-
-  const frontiers: [number, number][] = [[
-    Math.floor(Math.random() * rows) * 2 + 1,
-    Math.floor(Math.random() * cols) * 2 + 1,
-  ]]
-
   const NEIGHBOR_POS = [
     [0, 2], [2, 0], [0, -2], [-2, 0]
   ]
 
-  const visited: boolean[][] = Array.from({ length: ROWS }, () => Array(COLS))
+  const frontiers: [number, number][] = []
+  const passages: boolean[][] = Array.from({ length: ROWS }, () => Array(COLS))
 
-  while (frontiers.length) {
-    // pick one randomly
-    const randIndex = Math.floor(Math.random() * frontiers.length)
-    const [x, y] = frontiers[randIndex]
-    visited[x][y] = true
-
-    // get valid neighbors
-    const neighbors: [number, number][] = []
+  const getNeighbors = (x: number, y: number) => {
+    const frontierNeighbors: [number, number][] = []
+    const passageNeighbors: [number, number][] = []
     for (const [dy, dx] of NEIGHBOR_POS) {
       const nx = x + dx
       const ny = y + dy
-      if (nx <= 0 || ny <= 0 || nx >= ROWS - 1 || ny >= COLS - 1 || visited[nx][ny]) {
+      if (nx <= 0 || ny <= 0 || nx >= ROWS - 1 || ny >= COLS - 1) {
         continue
       }
-      neighbors.push([nx, ny])
-    }
-
-    // remove [x,y] from frontiers
-    if (!neighbors.length) {
-      if (frontiers.length === 1) {
-        frontiers.pop()
-      } else {
-        frontiers[randIndex] = frontiers.pop()!
+      if (passages[nx][ny]) {
+        passageNeighbors.push([nx, ny])
+        continue
       }
-      continue
+      frontierNeighbors.push([nx, ny])
+    }
+    return [frontierNeighbors, passageNeighbors]
+  }
+
+  const pushValidFrontiers = (arr: [number, number][]) => {
+    for (const [fx, fy] of arr) {
+      if (grid[fx][fy] !== 2) {
+        grid[fx][fy] = 2
+        frontiers.push([fx, fy])
+      }
+    }
+  }
+
+  const rows = (ROWS - 1) / 2
+  const cols = (COLS - 1) / 2
+  const [x, y] = [
+    Math.floor(Math.random() * rows) * 2 + 1,
+    Math.floor(Math.random() * cols) * 2 + 1,
+  ]
+  passages[x][y] = true
+  const [frontierNeighbors] = getNeighbors(x, y)
+  pushValidFrontiers(frontierNeighbors)
+
+  while (frontiers.length) {
+    // pick one frontier randomly
+    const randIndex = Math.floor(Math.random() * frontiers.length)
+    const [x, y] = frontiers[randIndex]
+    passages[x][y] = true
+    grid[x][y] = 1
+
+    // get and push all valid neighbors
+    const [frontierNeighbors, passageNeighbors] = getNeighbors(x, y)
+    pushValidFrontiers(frontierNeighbors)
+
+    // remove current frontier from list
+    if (frontiers.length === 1) {
+      frontiers.pop()
+    } else {
+      frontiers[randIndex] = frontiers.pop()!
     }
 
-    // choose a random neighbor
-    const randNeigborIndex = Math.floor(Math.random() * neighbors.length)
-    const [nx, ny] = neighbors[randNeigborIndex]
-    visited[nx][ny] = true
-    frontiers.push([nx, ny])
-
-    // break wall between the current cell and the neighbor
+    // break wall between the current frontier and the random passageNeighbors
+    const randPassage = Math.floor(Math.random() * passageNeighbors.length)
+    const [nx, ny] = passageNeighbors[randPassage]
     const wallX = (x + nx) / 2
     const wallY = (y + ny) / 2
     grid[wallX][wallY] = 1
