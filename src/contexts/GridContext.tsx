@@ -22,7 +22,7 @@ const createGridMaze = (rows: number, cols: number): number[][] => {
 }
 
 export const GridContextProvider = ({ children }: { children?: React.ReactNode }) => {
-  const [size, setSize] = useState<[number, number]>([20, 45])
+  const [size, setSize] = useState<[number, number]>([16, 32])
   const [grid, setGrid] = useState<number[][]>(createGridMaze(size[0], size[1]))
 
   return (

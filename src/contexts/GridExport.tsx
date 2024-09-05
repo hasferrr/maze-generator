@@ -8,3 +8,7 @@ export const useGrid = () => {
 export const useSize = () => {
   return useContext(GridContext).size
 }
+
+export const useSetGrid = () => {
+  return useContext(GridContext).setGrid
+}

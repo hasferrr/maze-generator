@@ -1,3 +1,4 @@
+import Button from './components/Button'
 import Grid from './components/Grid'
 
 const App = () => {
@@ -6,7 +7,7 @@ const App = () => {
       <div className="flex flex-col gap-4 h-full items-center justify-center">
         <div>Helo Maze</div>
         <Grid />
-        <div>Helo Maze</div>
+        <Button />
       </div>
     </div>
   )

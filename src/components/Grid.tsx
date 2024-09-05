@@ -16,7 +16,7 @@ const Grid = () => {
           {arrRow.map((val, colIndex) =>
             <div
               key={`${rowIndex}-${colIndex}`}
-              className={`flex flex-col ${gridColor[val]}`}
+              className={`${rowIndex}-${colIndex} flex flex-col ${gridColor[val]}`}
               style={{ width: cellSize, height: cellSize }}
             />
           )}
