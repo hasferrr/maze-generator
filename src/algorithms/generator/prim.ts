@@ -1,4 +1,4 @@
-import { Steps } from '../../types/types'
+import { StepQueue } from '../../types/types'
 import { SinglyLinkedListQueue } from '../../utils/queue'
 
 /**
@@ -7,8 +7,8 @@ import { SinglyLinkedListQueue } from '../../utils/queue'
  * - walls (0s)
  * - frontiers (2s)
  */
-export const prim = (grid: number[][]): Steps => {
-  const steps: Steps = new SinglyLinkedListQueue()
+export const prim = (grid: number[][]): StepQueue => {
+  const steps: StepQueue = new SinglyLinkedListQueue()
 
   const ROWS = grid.length
   const COLS = grid[0].length
@@ -65,7 +65,6 @@ export const prim = (grid: number[][]): Steps => {
     const randIndex = Math.floor(Math.random() * frontiers.length)
     const [x, y] = frontiers[randIndex]
     grid[x][y] = 1
-    steps.push({ row: x, col: y, val: 1 })
 
     // get and push all valid neighbors
     const [frontierNeighbors, passageNeighbors] = getNeighbors(x, y)
@@ -85,7 +84,10 @@ export const prim = (grid: number[][]): Steps => {
     const wallX = (x + nx) / 2
     const wallY = (y + ny) / 2
     grid[wallX][wallY] = 1
+
+    // push to step queue for animation
     steps.push({ row: wallX, col: wallY, val: 1 })
+    steps.push({ row: x, col: y, val: 1 })
   }
 
   return steps

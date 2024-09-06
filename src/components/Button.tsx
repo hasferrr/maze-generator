@@ -6,8 +6,9 @@ import { useGenerateMaze } from '../hooks/useGenerateMaze'
 const Button = () => {
   const { gridRef, resetGrid } = useGridContext()
   const { animate, inProgress } = useGenerateMaze()
+
   const handleGenerate = () => {
-    if (!inProgress.current) {
+    if (!inProgress) {
       resetGrid()
       const steps = prim(gridRef.current)
       animate(steps)
@@ -15,9 +16,11 @@ const Button = () => {
       animate(null)
     }
   }
+
   const handleSolve = () => {
     bfs(gridRef.current)
   }
+
   return (
     <div>
       <button onClick={handleGenerate}>Generate Maze</button>
