@@ -3,16 +3,20 @@ import { Steps } from '../types/types'
 import { GRID_COLOR } from '../utils/color'
 import { useGridContext } from './useGridContext'
 
-export const useAnimate = () => {
-  const { gridRef, gridDivRefs, inProgress } = useGridContext()
+export const useGenerateMaze = () => {
+  const { gridRef, gridDivRefs } = useGridContext()
   const stepsRef = useRef<Steps | null>(null)
+  const inProgress = useRef(false)
+  const delay = useRef(5)
 
   const animate = (steps: Steps | null) => {
     if (!inProgress.current) {
       stepsRef.current = steps
     }
-    inProgress.current = true
-    setTimeout(animateLoop, 0)
+    if (stepsRef.current) {
+      inProgress.current = true
+      setTimeout(animateLoop, delay.current)
+    }
   }
 
   const animateLoop = () => {
@@ -23,11 +27,12 @@ export const useAnimate = () => {
     }
     const { row, col, val } = stepsRef.current!.shift()!
     gridRef.current[row][col] = val
-    gridDivRefs.current[row][col].className = GRID_COLOR[val === 2 ? 3 : val]
-    setTimeout(animateLoop, 0)
+    gridDivRefs.current[row][col].className = GRID_COLOR[val]
+    setTimeout(animateLoop, delay.current)
   }
 
   return {
-    animate
+    animate,
+    inProgress,
   }
 }

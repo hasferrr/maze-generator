@@ -1,13 +1,14 @@
 import { createContext, useRef, useState } from 'react'
 import { createEmptyGrid, createWallGrid } from '../utils/createGrid'
+import { GRID_COLOR } from '../utils/color'
 
 interface GridContextType {
   size: [number, number]
   setSize: React.Dispatch<React.SetStateAction<[number, number]>>
   gridRef: React.MutableRefObject<number[][]>
   gridDivRefs: React.MutableRefObject<HTMLDivElement[][]>
-  inProgress: React.MutableRefObject<boolean>
   rerender: () => void
+  resetGrid: () => void
 }
 
 const GridContext = createContext<GridContextType>(null!)
@@ -17,9 +18,17 @@ export const GridContextProvider = ({ children }: { children?: React.ReactNode }
   const [size, setSize] = useState<[number, number]>([r, c])
   const gridRef = useRef<number[][]>(createWallGrid(r, c))
   const gridDivRefs = useRef<HTMLDivElement[][]>(createEmptyGrid(r, c))
-  const inProgress = useRef(false)
   const setDummy = useState(0)[1]
   const rerender = () => setDummy((n) => n + 1)
+
+  const resetGrid = () => {
+    for (let i = 0; i < gridRef.current.length; i++) {
+      for (let j = 0; j < gridRef.current[0].length; j++) {
+        gridRef.current[i][j] = 0
+        gridDivRefs.current[i][j].className = GRID_COLOR[0]
+      }
+    }
+  }
 
   return (
     <GridContext.Provider value={{
@@ -28,7 +37,7 @@ export const GridContextProvider = ({ children }: { children?: React.ReactNode }
       size,
       setSize,
       rerender,
-      inProgress,
+      resetGrid,
     }}>
       {children}
     </GridContext.Provider>

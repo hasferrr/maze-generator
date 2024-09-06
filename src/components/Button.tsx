@@ -1,11 +1,11 @@
 import { prim } from '../algorithms/generator/prim'
 import { bfs } from '../algorithms/pathfinder/bfs'
 import { useGridContext } from '../hooks/useGridContext'
-import { useAnimate } from '../hooks/useAnimate'
+import { useGenerateMaze } from '../hooks/useGenerateMaze'
 
 const Button = () => {
-  const { gridRef, inProgress, resetGrid } = useGridContext()
-  const { animate } = useAnimate()
+  const { gridRef, resetGrid } = useGridContext()
+  const { animate, inProgress } = useGenerateMaze()
   const handleGenerate = () => {
     if (!inProgress.current) {
       resetGrid()
