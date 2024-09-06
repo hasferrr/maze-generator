@@ -1,3 +1,4 @@
+import { Step, StepQueue } from '../../types/types'
 import { SinglyLinkedListQueue } from '../../utils/queue'
 
 /**
@@ -7,7 +8,9 @@ import { SinglyLinkedListQueue } from '../../utils/queue'
  * - visited (2s)
  * - result (3s)
  */
-export const bfs = (grid: number[][]): number[][] => {
+export const bfs = (grid: number[][]): StepQueue => {
+  const steps: StepQueue = new SinglyLinkedListQueue()
+
   const ROWS = grid.length
   const COLS = grid[0].length
   const DIRECTIONS = [
@@ -18,6 +21,7 @@ export const bfs = (grid: number[][]): number[][] => {
   const end: [number, number] = [1, grid[0].length - 2]
 
   let shortest = 0
+  let solved = false
   const path = new Map<string, [number, number] | null>()
   const queue = new SinglyLinkedListQueue<[number, number]>()
   path.set(`${start[0]},${start[1]}`, null)
@@ -25,22 +29,35 @@ export const bfs = (grid: number[][]): number[][] => {
 
   while (queue.length) {
     const qLen = queue.length
+
     for (let i = 0; i < qLen; i++) {
       const [x, y] = queue.shift()!
 
       if (x === end[0] && y === end[1]) {
         grid[x][y] = 3
+        steps.push({ row: x, col: y, val: 2 })
+
+        const resultStepList: Step[] = []
+        resultStepList.push({ row: x, col: y, val: 3 })
+
         let backtrack = path.get(`${x},${y}`)
         while (backtrack) {
           const [px, py] = backtrack
           grid[px][py] = 3
           backtrack = path.get(`${px},${py}`)
+          resultStepList.push({ row: px, col: py, val: 3 })
         }
-        console.log(shortest)
-        return grid
+
+        for (let i = resultStepList.length - 1; i >= 0; i--) {
+          steps.push(resultStepList[i])
+        }
+
+        solved = true
+        break
       }
 
       grid[x][y] = 2
+      steps.push({ row: x, col: y, val: 2 })
 
       for (const [dy, dx] of DIRECTIONS) {
         const nx = x + dx
@@ -54,8 +71,11 @@ export const bfs = (grid: number[][]): number[][] => {
         }
       }
     }
+
+    if (solved) break
     shortest++
   }
 
-  return grid
+  console.log(shortest)
+  return steps
 }

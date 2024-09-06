@@ -10,15 +10,14 @@ const Button = () => {
   const handleGenerate = () => {
     if (!inProgress) {
       resetGrid()
-      const steps = prim(gridRef.current)
-      animate(steps)
+      animate(prim(gridRef.current))
     } else {
       animate(null)
     }
   }
 
   const handleSolve = () => {
-    bfs(gridRef.current)
+    animate(bfs(gridRef.current))
   }
 
   return (

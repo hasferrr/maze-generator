@@ -7,7 +7,7 @@ export const useGenerateMaze = () => {
   const { gridRef, gridDivRefs, resetGrid } = useGridContext()
   const [inProgress, setInProgress] = useState(false)
   const stepsRef = useRef<StepQueue | null>(null)
-  const delayRef = useRef(5)
+  const delayRef = useRef(10)
 
   const animate = (steps: StepQueue | null) => {
     if (!inProgress) {
