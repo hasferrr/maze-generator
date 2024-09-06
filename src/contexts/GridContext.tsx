@@ -1,5 +1,5 @@
 import { createContext, useState } from 'react'
-import { createWallGrid } from '../helpers/createGrid'
+import { createWallGrid } from '../utils/createGrid'
 
 interface GridContextType {
   grid: number[][]

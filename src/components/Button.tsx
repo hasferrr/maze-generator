@@ -1,8 +1,8 @@
-import { prim } from '../algorithms/generator/Prims'
-import { bfs } from '../algorithms/pathfinder/BFS'
+import { prim } from '../algorithms/generator/prim'
+import { bfs } from '../algorithms/pathfinder/bfs'
 import { useGrid, useSetGrid, useSize } from '../contexts/GridExport'
-import { copyGrid } from '../helpers/copyGrid'
-import { createWallGrid } from '../helpers/createGrid'
+import { copyGrid } from '../utils/copyGrid'
+import { createWallGrid } from '../utils/createGrid'
 import useAnimate from '../hooks/useAnimate'
 
 const Button = () => {

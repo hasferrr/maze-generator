@@ -1,5 +1,5 @@
-import { createWallGrid } from '../../helpers/createGrid'
-import { Steps } from '../../types'
+import { createWallGrid } from '../../utils/createGrid'
+import { Steps } from '../../types/types'
 
 /**
  * Prim's algorithm maze with marking of:

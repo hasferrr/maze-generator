@@ -1,6 +1,6 @@
 import { useSetGrid } from '../contexts/GridExport'
-import { copyGrid } from '../helpers/copyGrid'
-import { Steps } from '../types'
+import { copyGrid } from '../utils/copyGrid'
+import { Steps } from '../types/types'
 
 const useAnimate = () => {
   const setGrid = useSetGrid()
