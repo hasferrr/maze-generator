@@ -1,5 +1,5 @@
 import { useGridContext } from '../hooks/useGridContext'
-import { GRID_COLOR } from '../utils/color'
+import { generateClass } from '../utils/generateClass'
 
 const Grid = () => {
   const { gridRef: { current: grid }, gridDivRefs } = useGridContext()
@@ -12,7 +12,7 @@ const Grid = () => {
             <div
               key={`${r}-${c}`}
               ref={(el) => gridDivRefs.current[r][c] = el!}
-              className={GRID_COLOR[val]}
+              className={generateClass(val)}
               style={{ width: cellSize, height: cellSize }}
             />
           )}

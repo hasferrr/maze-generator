@@ -1,7 +1,7 @@
 import { useRef, useState } from 'react'
 import { StepQueue } from '../types/types'
-import { GRID_COLOR } from '../utils/color'
 import { useGridContext } from './useGridContext'
+import { generateClass } from '../utils/generateClass'
 
 type AnimationType = 'generate' | 'solve'
 
@@ -32,7 +32,7 @@ export const useAnimateMaze = () => {
     }
     const { row, col, val } = stepsRef.current.shift()!
     gridRef.current[row][col] = val
-    gridDivRefs.current[row][col].className = GRID_COLOR[val]
+    gridDivRefs.current[row][col].className = generateClass(val)
     setTimeout(animateLoop, delayRef.current)
   }
 

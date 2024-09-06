@@ -1,6 +1,6 @@
 import { createContext, useRef, useState } from 'react'
 import { createEmptyGrid, createWallGrid } from '../utils/createGrid'
-import { GRID_COLOR } from '../utils/color'
+import { generateClass } from '../utils/generateClass'
 
 interface GridContextType {
   size: [number, number]
@@ -25,7 +25,7 @@ export const GridContextProvider = ({ children }: { children?: React.ReactNode }
     for (let i = 0; i < gridRef.current.length; i++) {
       for (let j = 0; j < gridRef.current[0].length; j++) {
         gridRef.current[i][j] = 0
-        gridDivRefs.current[i][j].className = GRID_COLOR[0]
+        gridDivRefs.current[i][j].className = generateClass(0)
       }
     }
   }
