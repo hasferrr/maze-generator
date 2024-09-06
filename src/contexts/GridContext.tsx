@@ -1,21 +1,35 @@
-import { createContext, useState } from 'react'
-import { createWallGrid } from '../utils/createGrid'
+import { createContext, useRef, useState } from 'react'
+import { createEmptyGrid, createWallGrid } from '../utils/createGrid'
 
 interface GridContextType {
-  grid: number[][]
   size: [number, number]
-  setGrid: React.Dispatch<React.SetStateAction<number[][]>>
   setSize: React.Dispatch<React.SetStateAction<[number, number]>>
+  gridRef: React.MutableRefObject<number[][]>
+  gridDivRefs: React.MutableRefObject<HTMLDivElement[][]>
+  inProgress: React.MutableRefObject<boolean>
+  rerender: () => void
 }
 
 const GridContext = createContext<GridContextType>(null!)
 
 export const GridContextProvider = ({ children }: { children?: React.ReactNode }) => {
-  const [size, setSize] = useState<[number, number]>([16, 32])
-  const [grid, setGrid] = useState<number[][]>(createWallGrid(size[0], size[1]))
+  const [r, c] = [16, 32]
+  const [size, setSize] = useState<[number, number]>([r, c])
+  const gridRef = useRef<number[][]>(createWallGrid(r, c))
+  const gridDivRefs = useRef<HTMLDivElement[][]>(createEmptyGrid(r, c))
+  const inProgress = useRef(false)
+  const setDummy = useState(0)[1]
+  const rerender = () => setDummy((n) => n + 1)
 
   return (
-    <GridContext.Provider value={{ grid, setGrid, size, setSize }}>
+    <GridContext.Provider value={{
+      gridRef,
+      gridDivRefs,
+      size,
+      setSize,
+      rerender,
+      inProgress,
+    }}>
       {children}
     </GridContext.Provider>
   )

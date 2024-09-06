@@ -1,5 +1,5 @@
-import { createWallGrid } from '../../utils/createGrid'
 import { Steps } from '../../types/types'
+import { SinglyLinkedListQueue } from '../../utils/queue'
 
 /**
  * Prim's algorithm maze with marking of:
@@ -7,9 +7,8 @@ import { Steps } from '../../types/types'
  * - walls (0s)
  * - frontiers (2s)
  */
-export const prim = (rows: number, cols: number): Steps => {
-  const grid = createWallGrid(rows, cols)
-  const steps: Steps = []
+export const prim = (grid: number[][]): Steps => {
+  const steps: Steps = new SinglyLinkedListQueue()
 
   const ROWS = grid.length
   const COLS = grid[0].length
@@ -44,11 +43,14 @@ export const prim = (rows: number, cols: number): Steps => {
     for (const [fx, fy] of arr) {
       if (grid[fx][fy] !== 2) {
         grid[fx][fy] = 2
+        // steps.push({ row: fx, col: fy, val: 2 })
         frontiers.push([fx, fy])
       }
     }
   }
 
+  const rows = (ROWS - 1) / 2
+  const cols = (COLS - 1) / 2
   const [x, y] = [
     Math.floor(Math.random() * rows) * 2 + 1,
     Math.floor(Math.random() * cols) * 2 + 1,

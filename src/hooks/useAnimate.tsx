@@ -1,24 +1,33 @@
-import { copyGrid } from '../utils/copyGrid'
+import { useRef } from 'react'
 import { Steps } from '../types/types'
+import { GRID_COLOR } from '../utils/color'
 import { useGridContext } from './useGridContext'
 
-const useAnimate = () => {
-  const { setGrid } = useGridContext()
-  const animate = (steps: Steps, startGrid: number[][]) => {
-    if (!steps.length) {
+export const useAnimate = () => {
+  const { gridRef, gridDivRefs, inProgress } = useGridContext()
+  const stepsRef = useRef<Steps | null>(null)
+
+  const animate = (steps: Steps | null) => {
+    if (!inProgress.current) {
+      stepsRef.current = steps
+    }
+    inProgress.current = true
+    setTimeout(animateLoop, 0)
+  }
+
+  const animateLoop = () => {
+    if (!stepsRef.current!.length) {
+      stepsRef.current = null
+      inProgress.current = false
       return
     }
-    const { row, col, val } = steps.shift()!
-    startGrid[row][col] = val
-    requestAnimationFrame(() => {
-      setGrid(copyGrid(startGrid))
-      animate(steps, startGrid)
-    })
+    const { row, col, val } = stepsRef.current!.shift()!
+    gridRef.current[row][col] = val
+    gridDivRefs.current[row][col].className = GRID_COLOR[val === 2 ? 3 : val]
+    setTimeout(animateLoop, 0)
   }
 
   return {
     animate
   }
 }
-
-export default useAnimate
