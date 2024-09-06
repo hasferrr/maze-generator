@@ -1,4 +1,4 @@
-import { useGrid } from '../contexts/GridExport'
+import { useGridContext } from '../hooks/useGridContext'
 
 const gridColor = [
   'bg-[#333333]',
@@ -8,7 +8,7 @@ const gridColor = [
 ]
 
 const Grid = () => {
-  const grid = useGrid()
+  const { grid } = useGridContext()
   const cellSize = 544 / grid.length
   return (
     <div>

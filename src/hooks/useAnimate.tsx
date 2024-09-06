@@ -1,9 +1,9 @@
-import { useSetGrid } from '../contexts/GridExport'
 import { copyGrid } from '../utils/copyGrid'
 import { Steps } from '../types/types'
+import { useGridContext } from './useGridContext'
 
 const useAnimate = () => {
-  const setGrid = useSetGrid()
+  const { setGrid } = useGridContext()
   const animate = (steps: Steps, startGrid: number[][]) => {
     if (!steps.length) {
       return

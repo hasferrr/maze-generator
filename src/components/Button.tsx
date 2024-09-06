@@ -1,14 +1,12 @@
 import { prim } from '../algorithms/generator/prim'
 import { bfs } from '../algorithms/pathfinder/bfs'
-import { useGrid, useSetGrid, useSize } from '../contexts/GridExport'
+import { useGridContext } from '../hooks/useGridContext'
 import { copyGrid } from '../utils/copyGrid'
 import { createWallGrid } from '../utils/createGrid'
 import useAnimate from '../hooks/useAnimate'
 
 const Button = () => {
-  const [rows, cols] = useSize()
-  const setGrid = useSetGrid()
-  const grid = useGrid()
+  const { grid, setGrid, size: [rows, cols] } = useGridContext()
   const { animate } = useAnimate()
   const handleGenerate = () => {
     const steps = prim(rows, cols)
