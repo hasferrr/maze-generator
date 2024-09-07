@@ -6,7 +6,7 @@ import { useAnimationContext } from '../hooks/useAnimateContext'
 import { SinglyLinkedListQueue } from '../utils/queue'
 import { Step } from '../types/types'
 
-const GridComponent = () => {
+const Grid = () => {
   const { gridRef, gridDivRefs } = useGridContext()
   const { animate } = useAnimateMaze()
   const { inProgressRef } = useAnimationContext()
@@ -57,4 +57,4 @@ const GridComponent = () => {
   )
 }
 
-export default GridComponent
+export default Grid

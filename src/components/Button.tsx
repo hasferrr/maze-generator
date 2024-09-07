@@ -3,9 +3,8 @@ import { bfs } from '../algorithms/pathfinder/bfs'
 import { useGridContext } from '../hooks/useGridContext'
 import { useAnimateMaze } from '../hooks/useAnimateMaze'
 import { useAnimationContext } from '../hooks/useAnimateContext'
-import { Button, Flex } from '@radix-ui/themes'
 
-const ButtonComponent = () => {
+const Button = () => {
   const { gridRef } = useGridContext()
   const { animate, resetGrid } = useAnimateMaze()
   const { inProgressRef } = useAnimationContext()
@@ -27,18 +26,12 @@ const ButtonComponent = () => {
   }
 
   return (
-    <Flex gap="3" align="center">
-      <Button size="3" color="gray" highContrast onClick={handleGenerate}>
-        Generate Maze
-      </Button>
-      <Button size="3" color="gray" highContrast onClick={handleSolve}>
-        Solve
-      </Button>
-      <Button size="3" color="gray" highContrast onClick={resetGrid}>
-        Reset
-      </Button>
-    </Flex>
+    <div>
+      <button onClick={handleGenerate}>Generate Maze</button>
+      <button onClick={handleSolve}>Solve</button>
+      <button onClick={resetGrid}>Reset</button>
+    </div>
   )
 }
 
-export default ButtonComponent
+export default Button
