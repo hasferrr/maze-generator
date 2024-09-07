@@ -14,7 +14,7 @@ interface GridContextType {
 const GridContext = createContext<GridContextType>(null!)
 
 export const GridContextProvider = ({ children }: { children?: React.ReactNode }) => {
-  const [r, c] = [16, 32]
+  const [r, c] = [10, 10 * 2]
   const [size, setSize] = useState<[number, number]>([r, c])
   const gridRef = useRef<number[][]>(createFilledGrid(r, c, 1))
   const gridDivRefs = useRef<HTMLDivElement[][]>(createEmptyGrid(r, c))

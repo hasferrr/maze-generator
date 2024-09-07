@@ -9,7 +9,7 @@ export const useAnimateMaze = () => {
   const { gridRef, gridDivRefs, resetGrid } = useGridContext()
   const [inProgress, setInProgress] = useState<AnimationType | null>(null)
   const stepsListQueueRef = useRef<StepListQueue | null>(null)
-  const delayRef = useRef(5)
+  const delayRef = useRef(20)
 
   const animate = (steps: StepListQueue | null, type: AnimationType) => {
     if (inProgress && type !== inProgress) {

@@ -12,7 +12,7 @@ const Grid = () => {
             <div
               key={`${r}-${c}`}
               ref={(el) => gridDivRefs.current[r][c] = el!}
-              className={generateClass(r, c, val)}
+              className={generateClass(r, c, val, true)}
               style={{ width: cellSize, height: cellSize }}
             />
           )}
