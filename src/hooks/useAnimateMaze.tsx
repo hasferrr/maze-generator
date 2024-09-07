@@ -4,7 +4,7 @@ import { useGridContext } from './useGridContext'
 import { generateClass } from '../utils/generateClass'
 import { SinglyLinkedListQueue } from '../utils/queue'
 
-type AnimationType = 'generate' | 'solve' | 'reset'
+type AnimationType = 'generate' | 'solve' | 'reset' | 'other'
 
 export const useAnimateMaze = () => {
   const { gridRef, gridDivRefs } = useGridContext()

@@ -23,6 +23,7 @@ const valueToKey: Array<keyof typeof KeyToColor> = [
 
 export const generateClass = (row: number, col: number, n: number, noAnimation?: boolean) => {
   return twMerge(
+    'select-none',
     KeyToColor[valueToKey[n]],
     !noAnimation && KeyToAnimation[valueToKey[n]],
     n !== 0 && 'border-b border-r border-slate-600',
