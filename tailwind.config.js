@@ -16,11 +16,25 @@ export default {
           },
         },
         path: {
-          "0%": {
-            transform: "scale(0.3)",
+          '0%': {
+            transform: 'scale(0.3)',
+            backgroundColor: '#e2e8f0',
+            borderRadius: '100%',
           },
-          "100%": {
-            transform: "scale(1)",
+          '50%': {
+            backgroundColor: '#cbd5e1',
+          },
+          '75%': {
+            transform: 'scale(1.2)',
+            backgroundColor: '#64748b',
+          },
+          '90%': {
+            transform: 'scale(0.8)',
+            backgroundColor: '#1f2937',
+          },
+          '100%': {
+            transform: 'scale(1)',
+            backgroundColor: '#111827',
           },
         },
         visit: {
@@ -71,8 +85,8 @@ export default {
       animation: {
         wall: "wall 0.5s",
         path: "path 0.5s",
-        visit: "visit 1s",
-        result: "result 1s",
+        visit: "visit 0.5s",
+        result: "result 0.5s",
       },
     },
   },
