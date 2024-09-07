@@ -19,12 +19,6 @@ export default {
           "0%": {
             transform: "scale(0.3)",
           },
-          "75%": {
-            transform: "scale(1.2)",
-          },
-          "90%": {
-            transform: "scale(0.8)",
-          },
           "100%": {
             transform: "scale(1)",
           },
@@ -77,8 +71,8 @@ export default {
       animation: {
         wall: "wall 0.5s",
         path: "path 0.5s",
-        visit: "visit 0.75s",
-        result: "result 0.75s",
+        visit: "visit 1s",
+        result: "result 1s",
       },
     },
   },

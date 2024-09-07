@@ -5,10 +5,10 @@ import { useAnimateMaze } from '../hooks/useAnimateMaze'
 
 const Button = () => {
   const { gridRef } = useGridContext()
-  const { animate, inProgress, reset } = useAnimateMaze()
+  const { animate, inProgressRef, resetGrid } = useAnimateMaze()
 
   const handleGenerate = () => {
-    if (!inProgress) {
+    if (!inProgressRef.current) {
       animate(prim(gridRef.current), 'generate')
     } else {
       animate(null, 'generate')
@@ -16,7 +16,7 @@ const Button = () => {
   }
 
   const handleSolve = () => {
-    if (!inProgress) {
+    if (!inProgressRef.current) {
       animate(bfs(gridRef.current), 'solve')
     } else {
       animate(null, 'solve')
@@ -27,7 +27,7 @@ const Button = () => {
     <div>
       <button onClick={handleGenerate}>Generate Maze</button>
       <button onClick={handleSolve}>Solve</button>
-      <button onClick={reset}>Reset</button>
+      <button onClick={resetGrid}>Reset</button>
     </div>
   )
 }

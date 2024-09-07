@@ -1,6 +1,5 @@
 import { createContext, useRef, useState } from 'react'
 import { createEmptyGrid, createFilledGrid } from '../utils/createGrid'
-import { generateClass } from '../utils/generateClass'
 
 interface GridContextType {
   size: [number, number]
@@ -8,7 +7,6 @@ interface GridContextType {
   gridRef: React.MutableRefObject<number[][]>
   gridDivRefs: React.MutableRefObject<HTMLDivElement[][]>
   rerender: () => void
-  resetGrid: () => void
 }
 
 const GridContext = createContext<GridContextType>(null!)
@@ -21,15 +19,6 @@ export const GridContextProvider = ({ children }: { children?: React.ReactNode }
   const setDummy = useState(0)[1]
   const rerender = () => setDummy((n) => n + 1)
 
-  const resetGrid = () => {
-    for (let i = 0; i < gridRef.current.length; i++) {
-      for (let j = 0; j < gridRef.current[0].length; j++) {
-        gridRef.current[i][j] = 1
-        gridDivRefs.current[i][j].className = generateClass(i, j, 1)
-      }
-    }
-  }
-
   return (
     <GridContext.Provider value={{
       gridRef,
@@ -37,7 +26,6 @@ export const GridContextProvider = ({ children }: { children?: React.ReactNode }
       size,
       setSize,
       rerender,
-      resetGrid,
     }}>
       {children}
     </GridContext.Provider>

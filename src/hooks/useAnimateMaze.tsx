@@ -1,34 +1,39 @@
-import { useRef, useState } from 'react'
+import { useRef } from 'react'
 import { Step, StepListQueue } from '../types/types'
 import { useGridContext } from './useGridContext'
 import { generateClass } from '../utils/generateClass'
+import { SinglyLinkedListQueue } from '../utils/queue'
 
-type AnimationType = 'generate' | 'solve'
+type AnimationType = 'generate' | 'solve' | 'reset'
 
 export const useAnimateMaze = () => {
-  const { gridRef, gridDivRefs, resetGrid } = useGridContext()
-  const [inProgress, setInProgress] = useState<AnimationType | null>(null)
+  const { gridRef, gridDivRefs } = useGridContext()
   const stepsListQueueRef = useRef<StepListQueue | null>(null)
+  const inProgressRef = useRef<AnimationType | null>(null)
   const delayRef = useRef(20)
 
   const animate = (steps: StepListQueue | null, type: AnimationType) => {
-    if (inProgress && type !== inProgress) {
+    if (type === 'reset') {
+      stepsListQueueRef.current = steps
+      inProgressRef.current = 'reset'
+      setTimeout(animateLoop, delayRef.current)
       return
     }
-    if (!inProgress) {
+    if (inProgressRef.current && type !== inProgressRef.current) {
+      return
+    }
+    if (inProgressRef.current === null) {
       stepsListQueueRef.current = steps
     }
     if (stepsListQueueRef.current) {
-      setInProgress(type)
+      inProgressRef.current = type
       setTimeout(animateLoop, delayRef.current)
     }
   }
 
   const animateLoop = () => {
     if (!stepsListQueueRef.current?.length) {
-      stepsListQueueRef.current = null
-      setInProgress(null)
-      return
+      return stop()
     }
     const stepList = stepsListQueueRef.current.shift()!
     stepList.forEach((step: Step) => {
@@ -39,15 +44,36 @@ export const useAnimateMaze = () => {
     setTimeout(animateLoop, delayRef.current)
   }
 
-  const reset = () => {
+  const stop = () => {
+    inProgressRef.current = null
     stepsListQueueRef.current = null
-    resetGrid()
-    setInProgress(null)
+  }
+
+  const resetGrid = () => {
+    if (inProgressRef.current === 'reset') {
+      return
+    }
+    const steps = new SinglyLinkedListQueue<Step[]>
+    const grid = gridRef.current
+    const ROWS = grid.length
+    const COLS = grid[0].length
+    for (let diag = 0; diag < ROWS + COLS - 1; diag++) {
+      const arr: Step[] = []
+      const startRow = Math.min(ROWS - 1, diag)
+      const startCol = Math.max(0, diag - (ROWS - 1))
+      for (let i = startRow, j = startCol; i >= 0 && j < COLS; i--, j++) {
+        grid[i][j] = 1
+        arr.push({ row: i, col: j, val: 1 })
+      }
+      steps.push(arr)
+    }
+    animate(steps, 'reset')
   }
 
   return {
     animate,
-    inProgress,
-    reset,
+    resetGrid,
+    inProgressRef,
+    delayRef,
   }
 }
