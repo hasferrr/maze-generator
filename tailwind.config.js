@@ -17,24 +17,10 @@ export default {
         },
         path: {
           '0%': {
-            transform: 'scale(0.3)',
-            backgroundColor: '#e2e8f0',
-            borderRadius: '100%',
-          },
-          '50%': {
-            backgroundColor: '#cbd5e1',
-          },
-          '75%': {
-            transform: 'scale(1.2)',
-            backgroundColor: '#64748b',
-          },
-          '90%': {
-            transform: 'scale(0.8)',
-            backgroundColor: '#1f2937',
+            backgroundColor: '#0f172a',
           },
           '100%': {
-            transform: 'scale(1)',
-            backgroundColor: '#111827',
+            backgroundColor: '#e2e8f0',
           },
         },
         visit: {
