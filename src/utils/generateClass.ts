@@ -14,9 +14,11 @@ const valueToKey: Array<keyof typeof KeyToColor> = [
   'result',
 ]
 
-export const generateClass = (n: number) => {
+export const generateClass = (row: number, col: number, n: number) => {
   return twMerge(
     KeyToColor[valueToKey[n]],
-    valueToKey[n] !== 'wall' && 'border-t border-r border-slate-200',
+    valueToKey[n] !== 'wall' && 'border-b border-r border-slate-200',
+    row === 0 && 'border-t',
+    col === 0 && 'border-l',
   )
 }

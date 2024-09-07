@@ -25,7 +25,7 @@ export const GridContextProvider = ({ children }: { children?: React.ReactNode }
     for (let i = 0; i < gridRef.current.length; i++) {
       for (let j = 0; j < gridRef.current[0].length; j++) {
         gridRef.current[i][j] = 1
-        gridDivRefs.current[i][j].className = generateClass(1)
+        gridDivRefs.current[i][j].className = generateClass(i, j, 1)
       }
     }
   }

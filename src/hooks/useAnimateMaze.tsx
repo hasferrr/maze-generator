@@ -34,7 +34,7 @@ export const useAnimateMaze = () => {
     stepList.forEach((step: Step) => {
       const { row, col, val } = step
       gridRef.current[row][col] = val
-      gridDivRefs.current[row][col].className = generateClass(val)
+      gridDivRefs.current[row][col].className = generateClass(row, col, val)
     })
     setTimeout(animateLoop, delayRef.current)
   }
