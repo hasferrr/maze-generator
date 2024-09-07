@@ -2,11 +2,13 @@ import { prim } from '../algorithms/generator/prim'
 import { bfs } from '../algorithms/pathfinder/bfs'
 import { useGridContext } from '../hooks/useGridContext'
 import { useAnimateMaze } from '../hooks/useAnimateMaze'
+import { useAnimationContext } from '../hooks/useAnimateContext'
 import { Button, Flex } from '@radix-ui/themes'
 
 const ButtonComponent = () => {
   const { gridRef } = useGridContext()
-  const { animate, inProgressRef, resetGrid } = useAnimateMaze()
+  const { animate, resetGrid } = useAnimateMaze()
+  const { inProgressRef } = useAnimationContext()
 
   const handleGenerate = () => {
     if (!inProgressRef.current) {

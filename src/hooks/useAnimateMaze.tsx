@@ -1,16 +1,12 @@
-import { useRef } from 'react'
-import { Step, StepListQueue } from '../types/types'
+import { AnimationType, Step, StepListQueue } from '../types/types'
 import { useGridContext } from './useGridContext'
 import { generateClass } from '../utils/generateClass'
 import { SinglyLinkedListQueue } from '../utils/queue'
-
-type AnimationType = 'generate' | 'solve' | 'reset' | 'other'
+import { useAnimationContext } from './useAnimateContext'
 
 export const useAnimateMaze = () => {
   const { gridRef, gridDivRefs } = useGridContext()
-  const stepsListQueueRef = useRef<StepListQueue | null>(null)
-  const inProgressRef = useRef<AnimationType | null>(null)
-  const delayRef = useRef(1)
+  const { stepsListQueueRef, inProgressRef, delayRef } = useAnimationContext()
 
   const animate = (steps: StepListQueue | null, type: AnimationType) => {
     if (type === 'reset') {
@@ -73,7 +69,5 @@ export const useAnimateMaze = () => {
   return {
     animate,
     resetGrid,
-    inProgressRef,
-    delayRef,
   }
 }

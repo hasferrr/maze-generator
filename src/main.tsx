@@ -5,12 +5,15 @@ import { Theme } from '@radix-ui/themes'
 import App from './App.tsx'
 import './index.css'
 import { GridContextProvider } from './contexts/GridContext.tsx'
+import { AnimationContextProvider } from './contexts/AnimationContext.tsx'
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <Theme>
       <GridContextProvider>
-        <App />
+        <AnimationContextProvider>
+          <App />
+        </AnimationContextProvider>
       </GridContextProvider>
     </Theme>
   </StrictMode>,

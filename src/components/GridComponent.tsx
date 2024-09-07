@@ -2,31 +2,37 @@ import { useEffect, useRef } from 'react'
 import { useGridContext } from '../hooks/useGridContext'
 import { generateClass } from '../utils/generateClass'
 import { useAnimateMaze } from '../hooks/useAnimateMaze'
+import { useAnimationContext } from '../hooks/useAnimateContext'
 import { SinglyLinkedListQueue } from '../utils/queue'
 import { Step } from '../types/types'
 
 const GridComponent = () => {
-  const { gridRef: { current: grid }, gridDivRefs } = useGridContext()
-  const { animate, inProgressRef } = useAnimateMaze()
+  const { gridRef, gridDivRefs } = useGridContext()
+  const { animate } = useAnimateMaze()
+  const { inProgressRef } = useAnimationContext()
+
   const isMouseDownRef = useRef(false)
 
+  const grid = gridRef.current
   const cellSize = 544 / grid.length
 
   const draw = (row: number, col: number) => {
     if (inProgressRef.current) return
-    const q = new SinglyLinkedListQueue<Step[]>()
+    const qq = new SinglyLinkedListQueue<Step[]>()
     grid[row][col] = 0
-    q.push([{ row, col, val: 0 }])
-    animate(q, 'other')
+    qq.push([{ row, col, val: 0 }])
+    animate(qq, 'draw')
   }
 
   useEffect(() => {
-    window.addEventListener('mousedown', () => {
-      isMouseDownRef.current = true
-    })
-    window.addEventListener('mouseup', () => {
-      isMouseDownRef.current = false
-    })
+    const handleMouseDown = () => isMouseDownRef.current = true
+    const handleMouseUp = () => isMouseDownRef.current = false
+    document.addEventListener('mousedown', handleMouseDown)
+    document.addEventListener('mouseup', handleMouseUp)
+    return () => {
+      document.removeEventListener('mousedown', handleMouseDown)
+      document.removeEventListener('mouseup', handleMouseUp)
+    }
   }, [])
 
   return (
@@ -37,7 +43,7 @@ const GridComponent = () => {
             <div
               key={`${r}-${c}`}
               ref={(el) => gridDivRefs.current[r][c] = el!}
-              className={generateClass(r, c, val, true)}
+              className={generateClass(r, c, val)}
               style={{ width: cellSize, height: cellSize }}
               onMouseDown={() => draw(r, c)}
               onMouseOver={() => {
