@@ -4,10 +4,10 @@ export const createEmptyGrid = <T>(rows: number, cols: number): T[][] => {
   return Array.from({ length: rows }, () => Array(cols))
 }
 
-export const createWallGrid = (rows: number, cols: number): number[][] => {
+export const createFilledGrid = (rows: number, cols: number, val: number): number[][] => {
   rows = rows * 2 + 1
   cols = cols * 2 + 1
-  return Array.from({ length: rows }, () => Array(cols).fill(0))
+  return Array.from({ length: rows }, () => Array(cols).fill(val))
 }
 
 export const create1_0Grid = (rows: number, cols: number): number[][] => {

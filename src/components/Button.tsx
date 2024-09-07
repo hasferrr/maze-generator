@@ -4,12 +4,11 @@ import { useGridContext } from '../hooks/useGridContext'
 import { useAnimateMaze } from '../hooks/useAnimateMaze'
 
 const Button = () => {
-  const { gridRef, resetGrid } = useGridContext()
+  const { gridRef } = useGridContext()
   const { animate, inProgress, reset } = useAnimateMaze()
 
   const handleGenerate = () => {
     if (!inProgress) {
-      resetGrid()
       animate(prim(gridRef.current), 'generate')
     } else {
       animate(null, 'generate')

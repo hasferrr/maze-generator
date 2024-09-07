@@ -1,5 +1,5 @@
 import { useRef, useState } from 'react'
-import { StepQueue } from '../types/types'
+import { Step, StepListQueue } from '../types/types'
 import { useGridContext } from './useGridContext'
 import { generateClass } from '../utils/generateClass'
 
@@ -8,36 +8,39 @@ type AnimationType = 'generate' | 'solve'
 export const useAnimateMaze = () => {
   const { gridRef, gridDivRefs, resetGrid } = useGridContext()
   const [inProgress, setInProgress] = useState<AnimationType | null>(null)
-  const stepsRef = useRef<StepQueue | null>(null)
+  const stepsListQueueRef = useRef<StepListQueue | null>(null)
   const delayRef = useRef(5)
 
-  const animate = (steps: StepQueue | null, type: AnimationType) => {
+  const animate = (steps: StepListQueue | null, type: AnimationType) => {
     if (inProgress && type !== inProgress) {
       return
     }
     if (!inProgress) {
-      stepsRef.current = steps
+      stepsListQueueRef.current = steps
     }
-    if (stepsRef.current) {
+    if (stepsListQueueRef.current) {
       setInProgress(type)
       setTimeout(animateLoop, delayRef.current)
     }
   }
 
   const animateLoop = () => {
-    if (!stepsRef.current?.length) {
-      stepsRef.current = null
+    if (!stepsListQueueRef.current?.length) {
+      stepsListQueueRef.current = null
       setInProgress(null)
       return
     }
-    const { row, col, val } = stepsRef.current.shift()!
-    gridRef.current[row][col] = val
-    gridDivRefs.current[row][col].className = generateClass(val)
+    const stepList = stepsListQueueRef.current.shift()!
+    stepList.forEach((step: Step) => {
+      const { row, col, val } = step
+      gridRef.current[row][col] = val
+      gridDivRefs.current[row][col].className = generateClass(val)
+    })
     setTimeout(animateLoop, delayRef.current)
   }
 
   const reset = () => {
-    stepsRef.current = null
+    stepsListQueueRef.current = null
     resetGrid()
     setInProgress(null)
   }

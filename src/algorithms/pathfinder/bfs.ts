@@ -1,4 +1,4 @@
-import { Step, StepQueue } from '../../types/types'
+import { Step, StepListQueue } from '../../types/types'
 import { SinglyLinkedListQueue } from '../../utils/queue'
 
 /**
@@ -8,8 +8,8 @@ import { SinglyLinkedListQueue } from '../../utils/queue'
  * - visited (2s)
  * - result (3s)
  */
-export const bfs = (grid: number[][]): StepQueue => {
-  const steps: StepQueue = new SinglyLinkedListQueue()
+export const bfs = (grid: number[][]): StepListQueue => {
+  const steps: StepListQueue = new SinglyLinkedListQueue()
 
   const ROWS = grid.length
   const COLS = grid[0].length
@@ -35,7 +35,7 @@ export const bfs = (grid: number[][]): StepQueue => {
 
       if (x === end[0] && y === end[1]) {
         grid[x][y] = 3
-        steps.push({ row: x, col: y, val: 2 })
+        steps.push([{ row: x, col: y, val: 2 }])
 
         const resultStepList: Step[] = []
         resultStepList.push({ row: x, col: y, val: 3 })
@@ -49,7 +49,7 @@ export const bfs = (grid: number[][]): StepQueue => {
         }
 
         for (let i = resultStepList.length - 1; i >= 0; i--) {
-          steps.push(resultStepList[i])
+          steps.push([resultStepList[i]])
         }
 
         solved = true
@@ -57,7 +57,7 @@ export const bfs = (grid: number[][]): StepQueue => {
       }
 
       grid[x][y] = 2
-      steps.push({ row: x, col: y, val: 2 })
+      steps.push([{ row: x, col: y, val: 2 }])
 
       for (const [dy, dx] of DIRECTIONS) {
         const nx = x + dx
