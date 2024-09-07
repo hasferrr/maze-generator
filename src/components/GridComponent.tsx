@@ -1,7 +1,7 @@
 import { useGridContext } from '../hooks/useGridContext'
 import { generateClass } from '../utils/generateClass'
 
-const Grid = () => {
+const GridComponent = () => {
   const { gridRef: { current: grid }, gridDivRefs } = useGridContext()
   const cellSize = 544 / grid.length
   return (
@@ -22,4 +22,4 @@ const Grid = () => {
   )
 }
 
-export default Grid
+export default GridComponent

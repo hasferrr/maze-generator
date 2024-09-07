@@ -2,8 +2,9 @@ import { prim } from '../algorithms/generator/prim'
 import { bfs } from '../algorithms/pathfinder/bfs'
 import { useGridContext } from '../hooks/useGridContext'
 import { useAnimateMaze } from '../hooks/useAnimateMaze'
+import { Button, Flex } from '@radix-ui/themes'
 
-const Button = () => {
+const ButtonComponent = () => {
   const { gridRef } = useGridContext()
   const { animate, inProgressRef, resetGrid } = useAnimateMaze()
 
@@ -24,12 +25,18 @@ const Button = () => {
   }
 
   return (
-    <div>
-      <button onClick={handleGenerate}>Generate Maze</button>
-      <button onClick={handleSolve}>Solve</button>
-      <button onClick={resetGrid}>Reset</button>
-    </div>
+    <Flex gap="3" align="center">
+      <Button size="3" color="gray" highContrast onClick={handleGenerate}>
+        Generate Maze
+      </Button>
+      <Button size="3" color="gray" highContrast onClick={handleSolve}>
+        Solve
+      </Button>
+      <Button size="3" color="gray" highContrast onClick={resetGrid}>
+        Reset
+      </Button>
+    </Flex>
   )
 }
 
-export default Button
+export default ButtonComponent
