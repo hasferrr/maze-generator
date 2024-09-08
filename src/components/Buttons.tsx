@@ -68,7 +68,7 @@ const Buttons = () => {
             {pathfindingName ? pathfindingShort[pathfindingName] : 'Pick an Algorithm'}
           </Dropdown.Toggle>
           <Dropdown.Menu>
-            <Dropdown.Item disabled>
+            <Dropdown.Item onClick={() => handleSelectAlgorithm('a-star')}>
               A* Search
             </Dropdown.Item>
             <Dropdown.Item disabled>
