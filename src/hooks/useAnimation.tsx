@@ -2,7 +2,7 @@ import { useRef, useState } from 'react'
 import { AnimationType, Step, StepListQueue } from '../types/types'
 import { useGridContext } from './useGridContext'
 import { generateClass } from '../utils/generateClass'
-import { SinglyLinkedListQueue } from '../utils/queue'
+import { SinglyLinkedListQueue } from '../libs/datastructures/queue'
 import { useAnimationContext } from './useAnimateContext'
 
 export const useAnimation = () => {

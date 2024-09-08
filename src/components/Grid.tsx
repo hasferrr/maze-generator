@@ -3,7 +3,7 @@ import { useGridContext } from '../hooks/useGridContext'
 import { generateClass } from '../utils/generateClass'
 import { useAnimation } from '../hooks/useAnimation'
 import { useAnimationContext } from '../hooks/useAnimateContext'
-import { SinglyLinkedListQueue } from '../utils/queue'
+import { SinglyLinkedListQueue } from '../libs/datastructures/queue'
 import { Step } from '../types/types'
 
 const Grid = () => {

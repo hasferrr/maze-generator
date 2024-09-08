@@ -1,5 +1,5 @@
-import { Step, StepListQueue } from '../../types/types'
-import { SinglyLinkedListQueue } from '../../utils/queue'
+import { Step, StepListQueue } from '../../../types/types'
+import { SinglyLinkedListQueue } from '../../datastructures/queue'
 
 /**
  * BFS with marking of:

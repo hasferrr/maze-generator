@@ -1,4 +1,4 @@
-import { prim } from '../algorithms/generator/prim'
+import { prim } from '../libs/algorithms/generator/prim'
 import { MazeGeneratorName, StepListQueue } from '../types/types'
 
 export const runMazeGenerator = (name: MazeGeneratorName, grid: number[][]): StepListQueue => {
