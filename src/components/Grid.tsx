@@ -1,14 +1,14 @@
 import { useEffect, useRef } from 'react'
 import { useGridContext } from '../hooks/useGridContext'
 import { generateClass } from '../utils/generateClass'
-import { useAnimateMaze } from '../hooks/useAnimateMaze'
+import { useAnimation } from '../hooks/useAnimation'
 import { useAnimationContext } from '../hooks/useAnimateContext'
 import { SinglyLinkedListQueue } from '../utils/queue'
 import { Step } from '../types/types'
 
 const Grid = () => {
   const { gridRef, gridDivRefs } = useGridContext()
-  const { animate } = useAnimateMaze()
+  const { animate } = useAnimation()
   const { inProgressRef } = useAnimationContext()
 
   const isMouseDownRef = useRef(false)

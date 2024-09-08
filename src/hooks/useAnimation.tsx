@@ -5,7 +5,7 @@ import { generateClass } from '../utils/generateClass'
 import { SinglyLinkedListQueue } from '../utils/queue'
 import { useAnimationContext } from './useAnimateContext'
 
-export const useAnimateMaze = () => {
+export const useAnimation = () => {
   const { gridRef, gridDivRefs } = useGridContext()
   const { stepsListQueueRef, inProgressRef, delayRef } = useAnimationContext()
 

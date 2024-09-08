@@ -1,13 +1,13 @@
 import { prim } from '../algorithms/generator/prim'
 import { bfs } from '../algorithms/pathfinder/bfs'
 import { useGridContext } from '../hooks/useGridContext'
-import { useAnimateMaze } from '../hooks/useAnimateMaze'
+import { useAnimation } from '../hooks/useAnimation'
 import { useAnimationContext } from '../hooks/useAnimateContext'
 import { Button, ButtonGroup, Dropdown } from 'react-bootstrap'
 
 const Buttons = () => {
   const { gridRef } = useGridContext()
-  const { animate, resetGrid, speed } = useAnimateMaze()
+  const { animate, resetGrid, speed } = useAnimation()
   const { inProgressRef } = useAnimationContext()
 
   const handleGenerate = () => {
