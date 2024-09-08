@@ -12,7 +12,7 @@ const AnimationContext = createContext<AnimationContextType>(null!)
 export const AnimationContextProvider = ({ children }: { children?: React.ReactNode }) => {
   const stepsListQueueRef = useRef<StepListQueue | null>(null)
   const inProgressRef = useRef<AnimationType | null>(null)
-  const delayRef = useRef(1)
+  const delayRef = useRef(10)
 
   return (
     <AnimationContext.Provider value={{

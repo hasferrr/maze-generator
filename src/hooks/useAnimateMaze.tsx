@@ -1,3 +1,4 @@
+import { useRef, useState } from 'react'
 import { AnimationType, Step, StepListQueue } from '../types/types'
 import { useGridContext } from './useGridContext'
 import { generateClass } from '../utils/generateClass'
@@ -8,11 +9,14 @@ export const useAnimateMaze = () => {
   const { gridRef, gridDivRefs } = useGridContext()
   const { stepsListQueueRef, inProgressRef, delayRef } = useAnimationContext()
 
+  const timeoutListRef = useRef<ReturnType<typeof setTimeout>[]>([])
+  const [multiplier, setMultiplier] = useState(1)
+
   const animate = (steps: StepListQueue | null, type: AnimationType) => {
     if (type === 'reset') {
       stepsListQueueRef.current = steps
       inProgressRef.current = 'reset'
-      setTimeout(animateLoop, delayRef.current)
+      callAnimateLoop(multiplier)
       return
     }
     if (inProgressRef.current && type !== inProgressRef.current) {
@@ -23,13 +27,22 @@ export const useAnimateMaze = () => {
     }
     if (stepsListQueueRef.current) {
       inProgressRef.current = type
-      setTimeout(animateLoop, delayRef.current)
+      callAnimateLoop(multiplier)
+    }
+  }
+
+  const callAnimateLoop = (n: number) => {
+    n = n < 1 ? 1 : n
+    for (let i = 0; i < n; i++) {
+      setTimeout(() => {
+        timeoutListRef.current.push(setTimeout(animateLoop, delayRef.current))
+      }, delayRef.current / n * i)
     }
   }
 
   const animateLoop = () => {
     if (!stepsListQueueRef.current?.length) {
-      return stop()
+      return clearState()
     }
     const stepList = stepsListQueueRef.current.shift()!
     stepList.forEach((step: Step) => {
@@ -37,12 +50,59 @@ export const useAnimateMaze = () => {
       gridRef.current[row][col] = val
       gridDivRefs.current[row][col].className = generateClass(row, col, val)
     })
-    setTimeout(animateLoop, delayRef.current)
+    timeoutListRef.current.push(setTimeout(animateLoop, delayRef.current))
   }
 
-  const stop = () => {
+  const clearState = () => {
+    stopAllTimeout()
     inProgressRef.current = null
     stepsListQueueRef.current = null
+  }
+
+  const stopAllTimeout = () => {
+    timeoutListRef.current.forEach((timeoutId) => clearTimeout(timeoutId))
+    timeoutListRef.current = []
+  }
+
+  const stopOneTimeout = () => {
+    clearTimeout(timeoutListRef.current.pop())
+  }
+
+  const increaseSpeed = () => {
+    if (multiplier === 8) {
+      return
+    }
+    if (multiplier <= 0.5) {
+      setMultiplier(multiplier * 2)
+      delayRef.current /= 2
+      return
+    }
+    if (multiplier >= 1) {
+      setMultiplier(multiplier + 1)
+      callAnimateLoop(1)
+    }
+  }
+
+  const decreaseSpeed = () => {
+    if (multiplier === 1 / 2 ** 3) {
+      return
+    }
+    if (multiplier <= 1) {
+      setMultiplier(multiplier / 2)
+      delayRef.current *= 2
+      return
+    }
+    if (multiplier > 1) {
+      setMultiplier(multiplier - 1)
+      stopOneTimeout()
+    }
+  }
+
+  const resetSpeed = () => {
+    stopAllTimeout()
+    setMultiplier(1)
+    delayRef.current = 10
+    callAnimateLoop(1)
   }
 
   const resetGrid = () => {
@@ -69,5 +129,11 @@ export const useAnimateMaze = () => {
   return {
     animate,
     resetGrid,
+    speed: {
+      multiplier,
+      increase: increaseSpeed,
+      decrease: decreaseSpeed,
+      reset: resetSpeed,
+    }
   }
 }

@@ -7,22 +7,18 @@ import { Button, ButtonGroup, Dropdown } from 'react-bootstrap'
 
 const Buttons = () => {
   const { gridRef } = useGridContext()
-  const { animate, resetGrid } = useAnimateMaze()
+  const { animate, resetGrid, speed } = useAnimateMaze()
   const { inProgressRef } = useAnimationContext()
 
   const handleGenerate = () => {
     if (!inProgressRef.current) {
       animate(prim(gridRef.current), 'generate')
-    } else {
-      animate(null, 'generate')
     }
   }
 
   const handleSolve = () => {
     if (!inProgressRef.current) {
       animate(bfs(gridRef.current), 'solve')
-    } else {
-      animate(null, 'solve')
     }
   }
 
@@ -56,9 +52,9 @@ const Buttons = () => {
           </Dropdown.Menu>
         </Dropdown>
         <ButtonGroup aria-label="Speed" className="*:mx-0">
-          <Button variant="dark">-</Button>
-          <Button variant="dark">1x</Button>
-          <Button variant="dark">+</Button>
+          <Button variant="dark" onClick={speed.decrease}>-</Button>
+          <Button variant="dark" onClick={speed.reset} className="w-14 px-0">{speed.multiplier}x</Button>
+          <Button variant="dark" onClick={speed.increase}>+</Button>
         </ButtonGroup>
       </div>
     </div>
