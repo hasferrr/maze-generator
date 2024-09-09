@@ -105,7 +105,7 @@ export const useAnimation = () => {
     callAnimateLoop(1)
   }
 
-  const resetGrid = () => {
+  const clearGrid = () => {
     if (inProgressRef.current === 'reset') {
       return
     }
@@ -126,9 +126,33 @@ export const useAnimation = () => {
     animate(steps, 'reset')
   }
 
+  const clearVisited = () => {
+    if (inProgressRef.current === 'reset') {
+      return
+    }
+    const steps = new SinglyLinkedListQueue<Step[]>
+    const grid = gridRef.current
+    const ROWS = grid.length
+    const COLS = grid[0].length
+    for (let diag = 0; diag < ROWS + COLS - 1; diag++) {
+      const arr: Step[] = []
+      const startRow = Math.min(ROWS - 1, diag)
+      const startCol = Math.max(0, diag - (ROWS - 1))
+      for (let i = startRow, j = startCol; i >= 0 && j < COLS; i--, j++) {
+        if ([2, 3].includes(grid[i][j])) {
+          grid[i][j] = 1
+          arr.push({ row: i, col: j, val: 1 })
+        }
+      }
+      steps.push(arr)
+    }
+    animate(steps, 'reset')
+  }
+
   return {
     animate,
-    resetGrid,
+    clearGrid,
+    clearVisited,
     speed: {
       multiplier,
       increase: increaseSpeed,

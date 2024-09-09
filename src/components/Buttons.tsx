@@ -10,7 +10,7 @@ import { MazeGeneratorName, PathfindingName } from '../types/types'
 
 const Buttons = () => {
   const { gridRef } = useGridContext()
-  const { animate, resetGrid, speed } = useAnimation()
+  const { animate, clearGrid, clearVisited, speed } = useAnimation()
   const { inProgressRef } = useAnimationContext()
 
   const [pathfindingName, setPathfindingName] = useState<PathfindingName | null>(null)
@@ -40,7 +40,19 @@ const Buttons = () => {
   return (
     <div className="flex">
       <div className="flex w-96 justify-end">
-        <Button variant="dark" onClick={resetGrid}>Reset</Button>
+        <Dropdown drop="up-centered" className="*:mx-0">
+          <Dropdown.Toggle variant="dark">
+            Clear
+          </Dropdown.Toggle>
+          <Dropdown.Menu>
+            <Dropdown.Item onClick={clearGrid}>
+              Clear All
+            </Dropdown.Item>
+            <Dropdown.Item onClick={clearVisited}>
+              Clear Visited
+            </Dropdown.Item>
+          </Dropdown.Menu>
+        </Dropdown>
         <Dropdown drop="up-centered">
           <Dropdown.Toggle variant="dark" className="w-40">
             Generate Maze
