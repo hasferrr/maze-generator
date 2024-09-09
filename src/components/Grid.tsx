@@ -3,10 +3,12 @@ import { useGridContext } from '../hooks/useGridContext'
 import { generateClass } from '../utils/generateClass'
 import { useAnimationContext } from '../hooks/useAnimateContext'
 import { findStartEnd } from '../utils/gridUtils'
+import { useDrawContext } from '../hooks/useDrawContext'
 
 const Grid = () => {
   const { gridRef, gridDivRefs } = useGridContext()
   const { inProgressRef } = useAnimationContext()
+  const { draw } = useDrawContext()
 
   const isMouseDownRef = useRef(false)
   const isDraggedStartTile = useRef(false)
@@ -15,10 +17,10 @@ const Grid = () => {
   const grid = gridRef.current
   const cellSize = 544 / grid.length
 
-  const draw = (row: number, col: number) => {
+  const handleDraw = (row: number, col: number) => {
     if (![99, 100].includes(grid[row][col])) {
-      grid[row][col] = 0
-      gridDivRefs.current[row][col].className = generateClass(row, col, 0)
+      grid[row][col] = draw === 'draw' ? 0 : 1
+      gridDivRefs.current[row][col].className = generateClass(row, col, draw === 'draw' ? 0 : 1)
     }
   }
 
@@ -43,7 +45,7 @@ const Grid = () => {
       isDraggedEndTile.current = true
       return
     }
-    draw(row, col)
+    handleDraw(row, col)
   }
 
   const handleMouseOver = (row: number, col: number) => {
@@ -62,7 +64,7 @@ const Grid = () => {
       gridDivRefs.current[row][col].className = generateClass(row, col, newValue, true)
       return
     }
-    draw(row, col)
+    handleDraw(row, col)
   }
 
   const handleMouseUp = () => {
