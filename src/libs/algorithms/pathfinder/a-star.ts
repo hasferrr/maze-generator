@@ -1,4 +1,4 @@
-import { HeuristicType, Step, StepListQueue } from '../../../types/types'
+import { GridValues, HeuristicType, Step, StepListQueue } from '../../../types/types'
 import { heuristicFunctionMap } from '../../../utils/heuristics'
 import { Heap } from '../../datastructures/heap'
 import { SinglyLinkedListQueue } from '../../datastructures/queue'
@@ -19,7 +19,7 @@ interface PosNode {
  * - visited/closed (2s)
  * - result (3s)
  */
-export const aStar = (grid: number[][], type: HeuristicType): StepListQueue => {
+export const aStar = (grid: GridValues[][], type: HeuristicType): StepListQueue => {
   const steps: StepListQueue = new SinglyLinkedListQueue()
 
   const ROWS = grid.length

@@ -1,4 +1,5 @@
 import { twMerge } from 'tailwind-merge'
+import { GridValues } from '../types/types'
 
 enum KeyToColor {
   wall = 'bg-slate-900',
@@ -21,7 +22,7 @@ const valueToKey: Array<keyof typeof KeyToColor> = [
   'result',
 ]
 
-export const generateClass = (row: number, col: number, n: number) => {
+export const generateClass = (row: number, col: number, n: GridValues) => {
   return twMerge(
     'select-none',
     KeyToColor[valueToKey[n]],

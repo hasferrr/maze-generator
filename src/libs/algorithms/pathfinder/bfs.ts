@@ -1,4 +1,4 @@
-import { Step, StepListQueue } from '../../../types/types'
+import { GridValues, Step, StepListQueue } from '../../../types/types'
 import { SinglyLinkedListQueue } from '../../datastructures/queue'
 
 /**
@@ -8,7 +8,7 @@ import { SinglyLinkedListQueue } from '../../datastructures/queue'
  * - visited (2s)
  * - result (3s)
  */
-export const bfs = (grid: number[][]): StepListQueue => {
+export const bfs = (grid: GridValues[][]): StepListQueue => {
   const steps: StepListQueue = new SinglyLinkedListQueue()
 
   const ROWS = grid.length

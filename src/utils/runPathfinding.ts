@@ -1,8 +1,8 @@
 import { aStar } from '../libs/algorithms/pathfinder/a-star'
 import { bfs } from '../libs/algorithms/pathfinder/bfs'
-import { PathfindingName, StepListQueue } from '../types/types'
+import { GridValues, PathfindingName, StepListQueue } from '../types/types'
 
-export const runPathfinding = (name: PathfindingName, grid: number[][]): StepListQueue => {
+export const runPathfinding = (name: PathfindingName, grid: GridValues[][]): StepListQueue => {
   if (name === 'bfs') {
     return bfs(grid)
   }
