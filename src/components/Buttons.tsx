@@ -7,7 +7,7 @@ import { useDrawContext } from '../hooks/useDrawContext'
 import { runPathfinding } from '../utils/runPathfinding'
 import { pathfindingShort } from '../utils/algorithmNameMap'
 import { runMazeGenerator } from '../utils/runMazeGenerator'
-import { MazeGeneratorName, PathfindingName } from '../types/types'
+import { HeuristicType, MazeGeneratorName, PathfindingName } from '../types/types'
 
 const Buttons = () => {
   const { gridRef } = useGridContext()
@@ -17,6 +17,7 @@ const Buttons = () => {
 
   const [pathfindingName, setPathfindingName] = useState<PathfindingName | null>(null)
   const [variant, setVariant] = useState('dark')
+  const [heuristic, setHeuristic] = useState<HeuristicType | null>(null)
 
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
@@ -28,6 +29,8 @@ const Buttons = () => {
       window.removeEventListener('keydown', handleKeyDown)
     }
   }, [setDraw])
+
+  const handleDrawChange = (val: 'draw' | 'erase') => setDraw(val)
 
   const handleGenerate = (name: MazeGeneratorName) => {
     if (!inProgressRef.current) {
@@ -41,16 +44,24 @@ const Buttons = () => {
       return
     }
     if (!inProgressRef.current) {
-      animate(runPathfinding(pathfindingName, gridRef.current), 'solve')
+      if (pathfindingName === 'a-star' && heuristic === null) {
+        setHeuristic('manhattan')
+      }
+      animate(runPathfinding(pathfindingName, gridRef.current, heuristic ?? 'manhattan'), 'solve')
     }
   }
 
   const handleSelectAlgorithm = (name: PathfindingName) => {
+    if (!['a-star'].includes(name)) {
+      setHeuristic(null)
+    }
     setPathfindingName(name)
     setVariant('dark')
   }
 
-  const handleDrawChange = (val: 'draw' | 'erase') => setDraw(val)
+  const handleChangeHeuristic = (type: HeuristicType) => {
+    if (!inProgressRef.current) setHeuristic(type)
+  }
 
   return (
     <div className="flex">
@@ -116,6 +127,23 @@ const Buttons = () => {
             </Dropdown.Item>
             <Dropdown.Item disabled>
               Depth First Search
+            </Dropdown.Item>
+          </Dropdown.Menu>
+        </Dropdown>
+        <Dropdown drop="up-centered">
+          <Dropdown.Toggle
+            variant={variant}
+            className="w-[115px]"
+            disabled={!['a-star'].includes(pathfindingName!)}
+          >
+            {heuristic ? heuristic[0].toUpperCase() + heuristic.slice(1) : 'Heuristic'}
+          </Dropdown.Toggle>
+          <Dropdown.Menu>
+            <Dropdown.Item onClick={() => handleChangeHeuristic('manhattan')}>
+              Manhattan
+            </Dropdown.Item>
+            <Dropdown.Item onClick={() => handleChangeHeuristic('euclidean')}>
+              Euclidean
             </Dropdown.Item>
           </Dropdown.Menu>
         </Dropdown>
