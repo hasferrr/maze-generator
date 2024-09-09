@@ -9,7 +9,7 @@ Maze Generator
 
 Pathfinding
 
-- [ ] DFS
-- [x] BFS
+- [x] A* Search
 - [ ] Greedy Best-First Search
-- [ ] A* Search
+- [x] BFS
+- [ ] DFS
