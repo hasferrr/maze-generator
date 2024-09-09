@@ -2,7 +2,7 @@ import { useEffect, useRef } from 'react'
 import { useGridContext } from '../hooks/useGridContext'
 import { generateClass } from '../utils/generateClass'
 import { useAnimationContext } from '../hooks/useAnimateContext'
-import { findStartEnd } from '../utils/findStartEnd'
+import { findStartEnd } from '../utils/gridUtils'
 
 const Grid = () => {
   const { gridRef, gridDivRefs } = useGridContext()

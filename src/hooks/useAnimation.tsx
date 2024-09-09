@@ -4,7 +4,7 @@ import { useGridContext } from './useGridContext'
 import { generateClass } from '../utils/generateClass'
 import { SinglyLinkedListQueue } from '../libs/datastructures/queue'
 import { useAnimationContext } from './useAnimateContext'
-import { findStartEnd } from '../utils/findStartEnd'
+import { findStartEnd } from '../utils/gridUtils'
 
 export const useAnimation = () => {
   const { gridRef, gridDivRefs } = useGridContext()

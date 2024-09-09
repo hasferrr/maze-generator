@@ -5,8 +5,3 @@ export const manhattanDistance = (x1: number, x2: number, y1: number, y2: number
 export const euclideanDistance = (x1: number, x2: number, y1: number, y2: number): number => {
   return (x1 - x2) ** 2 + (y1 - y2) ** 2
 }
-
-export const heuristicFunctionMap = {
-  manhattan: manhattanDistance,
-  euclidean: euclideanDistance,
-}

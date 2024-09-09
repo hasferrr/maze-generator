@@ -19,7 +19,6 @@ const valueToAnimation = new Map<GridValues, string>([
   [100, 'animate-wall'],
 ])
 
-// Manipulating the DOM with Refs improves performance rather than rerendering the state
 export const generateClass = (row: number, col: number, val: GridValues, noAnimation?: boolean) => {
   return twMerge(
     'select-none',

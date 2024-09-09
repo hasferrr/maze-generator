@@ -1,5 +1,5 @@
 import { createContext, useRef, useState } from 'react'
-import { createEmptyGrid, createFilledGrid } from '../utils/createGrid'
+import { createEmptyGrid, createFilledGrid } from '../utils/gridUtils'
 import { GridValues } from '../types/types'
 
 interface GridContextType {
@@ -12,8 +12,10 @@ interface GridContextType {
 const GridContext = createContext<GridContextType>(null!)
 
 export const GridContextProvider = ({ children }: { children?: React.ReactNode }) => {
-  const [r, c] = [10, 10 * 2]
-  const [size, setSize] = useState<[number, number]>([r, c])
+  const [size, setSize] = useState<[number, number]>([10, 10 * 2])
+  const [r, c] = size
+
+  // Manipulating the DOM or Grid with Refs improves performance rather than rerendering the state
   const gridRef = useRef<GridValues[][]>(createFilledGrid(r, c, 1))
   const gridDivRefs = useRef<HTMLDivElement[][]>(createEmptyGrid(r, c))
 

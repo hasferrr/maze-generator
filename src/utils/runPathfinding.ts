@@ -1,7 +1,7 @@
 import { aStar } from '../libs/algorithms/pathfinder/a-star'
 import { bfs } from '../libs/algorithms/pathfinder/bfs'
 import { GridValues, PathfindingName, StepListQueue } from '../types/types'
-import { findStartEnd } from './findStartEnd'
+import { findStartEnd } from './gridUtils'
 
 export const runPathfinding = (name: PathfindingName, grid: GridValues[][]): StepListQueue => {
   const pos = findStartEnd(grid)

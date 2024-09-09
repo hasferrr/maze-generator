@@ -1,5 +1,17 @@
 import { GridValues, PositionXY } from '../types/types'
 
+export const createEmptyGrid = <T>(rows: number, cols: number): T[][] => {
+  rows = rows * 2 + 1
+  cols = cols * 2 + 1
+  return Array.from({ length: rows }, () => Array(cols))
+}
+
+export const createFilledGrid = <T>(rows: number, cols: number, val: T): T[][] => {
+  rows = rows * 2 + 1
+  cols = cols * 2 + 1
+  return Array.from({ length: rows }, () => Array(cols).fill(val))
+}
+
 export const findStartEnd = (grid: GridValues[][]): { start: PositionXY, end: PositionXY } => {
   const start: PositionXY = [-1, -1]
   const end: PositionXY = [-1, -1]

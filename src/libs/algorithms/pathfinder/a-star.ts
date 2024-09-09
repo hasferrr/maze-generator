@@ -1,5 +1,5 @@
 import { GridValues, HeuristicType, PositionXY, Step, StepListQueue } from '../../../types/types'
-import { heuristicFunctionMap } from '../../../utils/heuristics'
+import { euclideanDistance, manhattanDistance } from '../../../utils/heuristics'
 import { Heap } from '../../datastructures/heap'
 import { SinglyLinkedListQueue } from '../../datastructures/queue'
 
@@ -30,7 +30,10 @@ export const aStar = (grid: GridValues[][], start: PositionXY, end: PositionXY, 
 
   const previous = new Map<string, PositionXY | null>()
 
-  const heuristicFn = heuristicFunctionMap[type]
+  const heuristicFn = type === 'manhattan'
+    ? manhattanDistance
+    : euclideanDistance
+
   const minHeap = new Heap<PosNode>((a, b) => {
     if (a.total === b.total) {
       return (a.cost - b.cost) || (a.heuristic - b.heuristic)
