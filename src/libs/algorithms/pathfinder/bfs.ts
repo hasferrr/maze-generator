@@ -1,4 +1,4 @@
-import { GridValues, Step, StepListQueue } from '../../../types/types'
+import { GridValues, PositionXY, Step, StepListQueue } from '../../../types/types'
 import { SinglyLinkedListQueue } from '../../datastructures/queue'
 
 /**
@@ -7,8 +7,10 @@ import { SinglyLinkedListQueue } from '../../datastructures/queue'
  * - paths (1s)
  * - visited (2s)
  * - result (3s)
+ * - start (99)
+ * - end (100)
  */
-export const bfs = (grid: GridValues[][]): StepListQueue => {
+export const bfs = (grid: GridValues[][], start: PositionXY, end: PositionXY): StepListQueue => {
   const steps: StepListQueue = new SinglyLinkedListQueue()
 
   const ROWS = grid.length
@@ -17,13 +19,11 @@ export const bfs = (grid: GridValues[][]): StepListQueue => {
     [0, 1], [1, 0], [0, -1], [-1, 0]
   ]
 
-  const start: [number, number] = [grid.length - 2, 1]
-  const end: [number, number] = [1, grid[0].length - 2]
-
   let shortest = 0
   let solved = false
-  const path = new Map<string, [number, number] | null>()
-  const queue = new SinglyLinkedListQueue<[number, number]>()
+
+  const path = new Map<string, PositionXY | null>()
+  const queue = new SinglyLinkedListQueue<PositionXY>()
   path.set(`${start[0]},${start[1]}`, null)
   queue.push(start)
 
@@ -32,14 +32,10 @@ export const bfs = (grid: GridValues[][]): StepListQueue => {
 
     for (let i = 0; i < qLen; i++) {
       const [x, y] = queue.shift()!
-      if (grid[x][y] !== 1) continue
+      if (![1, 99, 100].includes(grid[x][y])) continue
 
       if (x === end[0] && y === end[1]) {
-        grid[x][y] = 3
-        steps.push([{ row: x, col: y, val: 2 }])
-
         const resultStepList: Step[] = []
-        resultStepList.push({ row: x, col: y, val: 3 })
 
         let backtrack = path.get(`${x},${y}`)
         while (backtrack) {
@@ -49,7 +45,7 @@ export const bfs = (grid: GridValues[][]): StepListQueue => {
           resultStepList.push({ row: px, col: py, val: 3 })
         }
 
-        for (let i = resultStepList.length - 1; i >= 0; i--) {
+        for (let i = resultStepList.length - 2; i >= 0; i--) {
           steps.push([resultStepList[i]])
         }
 
@@ -57,8 +53,10 @@ export const bfs = (grid: GridValues[][]): StepListQueue => {
         break
       }
 
+      if (grid[x][y] === 1) {
+        steps.push([{ row: x, col: y, val: 2 }])
+      }
       grid[x][y] = 2
-      steps.push([{ row: x, col: y, val: 2 }])
 
       for (const [dy, dx] of DIRECTIONS) {
         const nx = x + dx
@@ -66,7 +64,7 @@ export const bfs = (grid: GridValues[][]): StepListQueue => {
         if (nx < 0 || ny < 0 || nx === ROWS || ny === COLS) {
           continue
         }
-        if (grid[nx][ny] === 1) {
+        if ([1, 99, 100].includes(grid[nx][ny])) {
           path.set(`${nx},${ny}`, [x, y])
           queue.push([nx, ny])
         }
@@ -76,6 +74,9 @@ export const bfs = (grid: GridValues[][]): StepListQueue => {
     if (solved) break
     shortest++
   }
+
+  grid[start[0]][start[1]] = 99
+  grid[end[0]][end[1]] = 100
 
   console.log(shortest)
   return steps

@@ -17,6 +17,11 @@ export const GridContextProvider = ({ children }: { children?: React.ReactNode }
   const gridRef = useRef<GridValues[][]>(createFilledGrid(r, c, 1))
   const gridDivRefs = useRef<HTMLDivElement[][]>(createEmptyGrid(r, c))
 
+  const ROWS = gridRef.current.length
+  const COLS = gridRef.current[0].length
+  gridRef.current[ROWS - 2][1] = 99
+  gridRef.current[1][COLS - 2] = 100
+
   return (
     <GridContext.Provider value={{
       gridRef,

@@ -103,5 +103,10 @@ export const prim = (grid: GridValues[][]): StepListQueue => {
     steps.push([{ row: x, col: y, val: 1 }])
   }
 
+  grid[ROWS - 2][1] = 99
+  grid[1][COLS - 2] = 100
+  steps.push([{ row: ROWS - 2, col: 1, val: 99 }])
+  steps.push([{ row: 1, col: COLS - 2, val: 100 }])
+
   return steps
 }

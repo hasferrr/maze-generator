@@ -8,6 +8,7 @@ type Start = 99
 type End = 100
 
 export type GridValues = Wall | Path | Visited | Result | Start | End
+export type PositionXY = [number, number]
 
 export type Step = { row: number, col: number, val: GridValues }
 export type StepListQueue = SinglyLinkedListQueue<Step[]>

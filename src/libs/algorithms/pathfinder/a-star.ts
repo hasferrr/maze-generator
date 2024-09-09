@@ -1,12 +1,10 @@
-import { GridValues, HeuristicType, Step, StepListQueue } from '../../../types/types'
+import { GridValues, HeuristicType, PositionXY, Step, StepListQueue } from '../../../types/types'
 import { heuristicFunctionMap } from '../../../utils/heuristics'
 import { Heap } from '../../datastructures/heap'
 import { SinglyLinkedListQueue } from '../../datastructures/queue'
 
-type positionXY = [number, number]
-
 interface PosNode {
-  pos: positionXY
+  pos: PositionXY
   cost: number
   heuristic: number
   total: number
@@ -18,8 +16,10 @@ interface PosNode {
  * - paths/open (1s)
  * - visited/closed (2s)
  * - result (3s)
+ * - start (99)
+ * - end (100)
  */
-export const aStar = (grid: GridValues[][], type: HeuristicType): StepListQueue => {
+export const aStar = (grid: GridValues[][], start: PositionXY, end: PositionXY, type: HeuristicType,): StepListQueue => {
   const steps: StepListQueue = new SinglyLinkedListQueue()
 
   const ROWS = grid.length
@@ -28,10 +28,7 @@ export const aStar = (grid: GridValues[][], type: HeuristicType): StepListQueue 
     [0, 1], [1, 0], [0, -1], [-1, 0]
   ]
 
-  const start: positionXY = [grid.length - 2, 1]
-  const end: positionXY = [1, grid[0].length - 2]
-
-  const previous = new Map<string, positionXY | null>()
+  const previous = new Map<string, PositionXY | null>()
 
   const heuristicFn = heuristicFunctionMap[type]
   const minHeap = new Heap<PosNode>((a, b) => {
@@ -52,19 +49,17 @@ export const aStar = (grid: GridValues[][], type: HeuristicType): StepListQueue 
   while (!minHeap.isEmpty()) {
     const curr = minHeap.pop()!
     const [x, y] = curr.pos
-    if (grid[x][y] !== 1) {
+    if (![1, 99, 100].includes(grid[x][y])) {
       continue
     }
 
+    if (grid[x][y] === 1) {
+      steps.push([{ row: x, col: y, val: 2 }])
+    }
     grid[x][y] = 2
-    steps.push([{ row: x, col: y, val: 2 }])
 
     if (x === end[0] && y === end[1]) {
-      grid[x][y] = 3
-      steps.push([{ row: x, col: y, val: 2 }])
-
       const stepList: Step[] = []
-      stepList.push({ row: x, col: y, val: 3 })
 
       let backtrack = previous.get(`${x},${y}`)
       while (backtrack) {
@@ -74,7 +69,7 @@ export const aStar = (grid: GridValues[][], type: HeuristicType): StepListQueue 
         stepList.push({ row: px, col: py, val: 3 })
       }
 
-      for (let i = stepList.length - 1; i >= 0; i--) {
+      for (let i = stepList.length - 2; i >= 0; i--) {
         steps.push([stepList[i]])
       }
 
@@ -88,7 +83,7 @@ export const aStar = (grid: GridValues[][], type: HeuristicType): StepListQueue 
       if (nx < 0 || ny < 0 || nx >= ROWS || ny >= COLS) {
         continue
       }
-      if (grid[nx][ny] !== 1) {
+      if (![1, 99, 100].includes(grid[nx][ny])) {
         continue
       }
       const nextCost = curr.cost + 1
@@ -102,6 +97,9 @@ export const aStar = (grid: GridValues[][], type: HeuristicType): StepListQueue 
       })
     }
   }
+
+  grid[start[0]][start[1]] = 99
+  grid[end[0]][end[1]] = 100
 
   return steps
 }

@@ -1,9 +1,10 @@
 import { useRef, useState } from 'react'
-import { AnimationType, Step, StepListQueue } from '../types/types'
+import { AnimationType, GridValues, Step, StepListQueue } from '../types/types'
 import { useGridContext } from './useGridContext'
 import { generateClass } from '../utils/generateClass'
 import { SinglyLinkedListQueue } from '../libs/datastructures/queue'
 import { useAnimationContext } from './useAnimateContext'
+import { findStartEnd } from '../utils/findStartEnd'
 
 export const useAnimation = () => {
   const { gridRef, gridDivRefs } = useGridContext()
@@ -105,11 +106,8 @@ export const useAnimation = () => {
     callAnimateLoop(1)
   }
 
-  const clearGrid = () => {
-    if (inProgressRef.current === 'reset') {
-      return
-    }
-    const steps = new SinglyLinkedListQueue<Step[]>
+  const updateGrid = (condition: (value: number) => boolean, newValue: GridValues) => {
+    const steps = new SinglyLinkedListQueue<Step[]>()
     const grid = gridRef.current
     const ROWS = grid.length
     const COLS = grid[0].length
@@ -118,35 +116,33 @@ export const useAnimation = () => {
       const startRow = Math.min(ROWS - 1, diag)
       const startCol = Math.max(0, diag - (ROWS - 1))
       for (let i = startRow, j = startCol; i >= 0 && j < COLS; i--, j++) {
-        grid[i][j] = 1
-        arr.push({ row: i, col: j, val: 1 })
+        if (condition(grid[i][j])) {
+          grid[i][j] = newValue
+          arr.push({ row: i, col: j, val: newValue })
+        }
       }
       steps.push(arr)
     }
     animate(steps, 'reset')
   }
 
+  const clearGrid = () => {
+    updateGrid((value) => ![99, 100].includes(value), 1)
+    const se = findStartEnd(gridRef.current)
+    if (se.start[0] === -1 || se.end[0] === -1) {
+      const ROWS = gridRef.current.length
+      const COLS = gridRef.current[0].length
+      gridRef.current[ROWS - 2][1] = 99
+      gridRef.current[1][COLS - 2] = 100
+      stepsListQueueRef.current?.push([
+        { row: ROWS - 2, col: 1, val: 99 },
+        { row: 1, col: COLS - 2, val: 100 },
+      ])
+    }
+  }
+
   const clearVisited = () => {
-    if (inProgressRef.current === 'reset') {
-      return
-    }
-    const steps = new SinglyLinkedListQueue<Step[]>
-    const grid = gridRef.current
-    const ROWS = grid.length
-    const COLS = grid[0].length
-    for (let diag = 0; diag < ROWS + COLS - 1; diag++) {
-      const arr: Step[] = []
-      const startRow = Math.min(ROWS - 1, diag)
-      const startCol = Math.max(0, diag - (ROWS - 1))
-      for (let i = startRow, j = startCol; i >= 0 && j < COLS; i--, j++) {
-        if ([2, 3].includes(grid[i][j])) {
-          grid[i][j] = 1
-          arr.push({ row: i, col: j, val: 1 })
-        }
-      }
-      steps.push(arr)
-    }
-    animate(steps, 'reset')
+    updateGrid((value) => [2, 3].includes(value), 1)
   }
 
   return {

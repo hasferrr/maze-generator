@@ -19,9 +19,11 @@ const Grid = () => {
   const draw = (row: number, col: number) => {
     if (inProgressRef.current) return
     const qq = new SinglyLinkedListQueue<Step[]>()
-    grid[row][col] = 0
-    qq.push([{ row, col, val: 0 }])
-    animate(qq, 'draw')
+    if (![99, 100].includes(grid[row][col])) {
+      grid[row][col] = 0
+      qq.push([{ row, col, val: 0 }])
+      animate(qq, 'draw')
+    }
   }
 
   useEffect(() => {
