@@ -7,6 +7,7 @@ import { useDrawContext } from '../hooks/useDrawContext'
 import { runPathfinding } from '../utils/runPathfinding'
 import { pathfindingShort } from '../utils/algorithmNameMap'
 import { runMazeGenerator } from '../utils/runMazeGenerator'
+import { anyVisitedCell } from '../utils/gridUtils'
 import { HeuristicType, MazeGeneratorName, PathfindingName } from '../types/types'
 
 const Buttons = () => {
@@ -16,7 +17,8 @@ const Buttons = () => {
   const { draw, setDraw } = useDrawContext()
 
   const [pathfindingName, setPathfindingName] = useState<PathfindingName | null>(null)
-  const [variant, setVariant] = useState('dark')
+  const [algoVariant, setAlgoVariant] = useState('dark')
+  const [clearVariant, setClearVariant] = useState('dark')
   const [heuristic, setHeuristic] = useState<HeuristicType | null>(null)
 
   useEffect(() => {
@@ -32,6 +34,14 @@ const Buttons = () => {
 
   const handleDrawChange = (val: 'draw' | 'erase') => setDraw(val)
 
+  const handleClear = (type: 'all' | 'visited') => {
+    setClearVariant('dark')
+    const clear = type === 'all'
+      ? clearGrid
+      : clearVisited
+    clear()
+  }
+
   const handleGenerate = (name: MazeGeneratorName) => {
     if (!inProgressRef.current) {
       animate(runMazeGenerator(name, gridRef.current), 'generate')
@@ -40,23 +50,28 @@ const Buttons = () => {
 
   const handleSolve = () => {
     if (pathfindingName === null) {
-      setVariant('danger')
+      setAlgoVariant('danger')
       return
     }
     if (!inProgressRef.current) {
       if (pathfindingName === 'a-star' && heuristic === null) {
         setHeuristic('manhattan')
       }
+      if (anyVisitedCell(gridRef.current)) {
+        setClearVariant('danger')
+        return
+      }
       animate(runPathfinding(pathfindingName, gridRef.current, heuristic ?? 'manhattan'), 'solve')
     }
   }
 
   const handleSelectAlgorithm = (name: PathfindingName) => {
+    if (inProgressRef.current) return
     if (!['a-star'].includes(name)) {
       setHeuristic(null)
     }
     setPathfindingName(name)
-    setVariant('dark')
+    setAlgoVariant('dark')
   }
 
   const handleChangeHeuristic = (type: HeuristicType) => {
@@ -77,14 +92,14 @@ const Buttons = () => {
           <ToggleButton variant="dark" id="erase" value="erase">Erase</ToggleButton>
         </ToggleButtonGroup>
         <Dropdown drop="up-centered">
-          <Dropdown.Toggle variant="dark">
+          <Dropdown.Toggle variant={clearVariant}>
             Clear
           </Dropdown.Toggle>
           <Dropdown.Menu>
-            <Dropdown.Item onClick={clearGrid}>
+            <Dropdown.Item onClick={() => handleClear('all')}>
               Clear All
             </Dropdown.Item>
-            <Dropdown.Item onClick={clearVisited}>
+            <Dropdown.Item onClick={() => handleClear('visited')}>
               Clear Visited
             </Dropdown.Item>
           </Dropdown.Menu>
@@ -112,7 +127,7 @@ const Buttons = () => {
       <Button variant="success" onClick={handleSolve}>Solve</Button>
       <div className="flex w-[30rem]">
         <Dropdown drop="up-centered">
-          <Dropdown.Toggle variant={variant} className="w-40">
+          <Dropdown.Toggle variant={algoVariant} className="w-40">
             {pathfindingName ? pathfindingShort[pathfindingName] : 'Pick an Algorithm'}
           </Dropdown.Toggle>
           <Dropdown.Menu>
@@ -132,7 +147,7 @@ const Buttons = () => {
         </Dropdown>
         <Dropdown drop="up-centered">
           <Dropdown.Toggle
-            variant={variant}
+            variant="dark"
             className="w-[115px]"
             disabled={!['a-star'].includes(pathfindingName!)}
           >

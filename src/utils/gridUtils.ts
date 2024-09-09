@@ -28,3 +28,14 @@ export const findStartEnd = (grid: GridValues[][]): { start: PositionXY, end: Po
   }
   return { start, end }
 }
+
+export const anyVisitedCell = (grid: GridValues[][]): boolean => {
+  for (let i = 0; i < grid.length; i++) {
+    for (let j = 0; j < grid[i].length; j++) {
+      if ([2, 3].includes(grid[i][j])) {
+        return true
+      }
+    }
+  }
+  return false
+}
