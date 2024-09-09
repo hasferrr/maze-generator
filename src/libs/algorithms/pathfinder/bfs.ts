@@ -32,7 +32,7 @@ export const bfs = (grid: number[][]): StepListQueue => {
 
     for (let i = 0; i < qLen; i++) {
       const [x, y] = queue.shift()!
-      if (grid[x][y] === 2) continue
+      if (grid[x][y] !== 1) continue
 
       if (x === end[0] && y === end[1]) {
         grid[x][y] = 3

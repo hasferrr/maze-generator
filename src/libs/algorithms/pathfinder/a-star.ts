@@ -1,15 +1,15 @@
 import { HeuristicType, Step, StepListQueue } from '../../../types/types'
 import { heuristicFunctionMap } from '../../../utils/heuristics'
-import { MinHeap } from '../../datastructures/heap'
+import { Heap } from '../../datastructures/heap'
 import { SinglyLinkedListQueue } from '../../datastructures/queue'
 
 type positionXY = [number, number]
 
 interface PosNode {
-  src: positionXY
-  dst: positionXY
+  pos: positionXY
   cost: number
   heuristic: number
+  total: number
 }
 
 /**
@@ -34,26 +34,30 @@ export const aStar = (grid: number[][], type: HeuristicType): StepListQueue => {
   const previous = new Map<string, positionXY | null>()
 
   const heuristicFn = heuristicFunctionMap[type]
-  const minHeap = new MinHeap<PosNode>((a, b) => {
-    const g = a.cost - b.cost
-    const h = a.heuristic - b.heuristic
-    const f = g + h
-    return f === 0 ? -h : f
+  const minHeap = new Heap<PosNode>((a, b) => {
+    if (a.total === b.total) {
+      return (a.cost - b.cost) || (a.heuristic - b.heuristic)
+    }
+    return a.total - b.total
   })
 
+  const heuristicStart = heuristicFn(start[0], end[0], start[1], end[1])
   minHeap.insert({
-    src: [-1, -1],
-    dst: start,
+    pos: start,
     cost: 0,
-    heuristic: heuristicFn(start[0], end[0], start[1], end[1]),
+    heuristic: heuristicStart,
+    total: heuristicStart,
   })
 
   while (!minHeap.isEmpty()) {
     const curr = minHeap.pop()!
-    const [x, y] = curr.dst
-    if (grid[x][y] === 0 || grid[x][y] === 2) {
+    const [x, y] = curr.pos
+    if (grid[x][y] !== 1) {
       continue
     }
+
+    grid[x][y] = 2
+    steps.push([{ row: x, col: y, val: 2 }])
 
     if (x === end[0] && y === end[1]) {
       grid[x][y] = 3
@@ -73,11 +77,10 @@ export const aStar = (grid: number[][], type: HeuristicType): StepListQueue => {
       for (let i = stepList.length - 1; i >= 0; i--) {
         steps.push([stepList[i]])
       }
+
+      console.log(curr.cost)
       break
     }
-
-    grid[x][y] = 2
-    steps.push([{ row: x, col: y, val: 2 }])
 
     for (const [dx, dy] of DIRECTIONS) {
       const nx = x + dx
@@ -85,16 +88,17 @@ export const aStar = (grid: number[][], type: HeuristicType): StepListQueue => {
       if (nx < 0 || ny < 0 || nx >= ROWS || ny >= COLS) {
         continue
       }
-      if (grid[nx][ny] === 0 || grid[nx][ny] === 2) {
+      if (grid[nx][ny] !== 1) {
         continue
       }
       const nextCost = curr.cost + 1
-      previous.set(`${nx},${ny}`, curr.dst)
+      const heuristicVal = heuristicFn(nx, end[0], ny, end[1])
+      previous.set(`${nx},${ny}`, curr.pos)
       minHeap.insert({
-        src: [x, y],
-        dst: [nx, ny],
+        pos: [nx, ny],
         cost: nextCost,
-        heuristic: heuristicFn(nx, end[0], ny, end[1]),
+        heuristic: heuristicVal,
+        total: nextCost + heuristicVal,
       })
     }
   }

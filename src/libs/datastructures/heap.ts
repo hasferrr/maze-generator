@@ -1,4 +1,4 @@
-class MinHeap<T> {
+class Heap<T> {
   heap: T[]
   compare: (a: T, b: T) => number
   constructor(compare: (a: T, b: T) => number) {
@@ -73,11 +73,11 @@ class MinHeap<T> {
       child = this.lessThan(this.heap[r], this.heap[l]) ? r : l
     }
 
-    if (!this.lessThan(this.heap[i], this.heap[child])) {
+    if (this.lessThan(this.heap[child], this.heap[i])) {
       this.swap(i, child)
       return this.reorderDown(child)
     }
   }
 }
 
-export { MinHeap }
+export { Heap }
