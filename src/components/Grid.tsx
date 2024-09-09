@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useMemo, useCallback } from 'react'
 import { useGridContext } from '../hooks/useGridContext'
 import { generateClass } from '../utils/generateClass'
 import { useAnimationContext } from '../hooks/useAnimateContext'
@@ -8,7 +8,7 @@ import { useDrawContext } from '../hooks/useDrawContext'
 const Grid = () => {
   const { gridRef, gridDivRefs } = useGridContext()
   const { inProgressRef } = useAnimationContext()
-  const { draw } = useDrawContext()
+  const { drawRef } = useDrawContext()
 
   const isMouseDownRef = useRef(false)
   const isDraggedStartTile = useRef(false)
@@ -17,16 +17,13 @@ const Grid = () => {
   const grid = gridRef.current
   const cellSize = 544 / grid.length
 
-  const handleDraw = (row: number, col: number) => {
-    if (![99, 100].includes(grid[row][col])) {
-      grid[row][col] = draw === 'draw' ? 0 : 1
-      gridDivRefs.current[row][col].className = generateClass(row, col, draw === 'draw' ? 0 : 1)
-    }
-  }
-
   useEffect(() => {
     const handleMouseDown = () => isMouseDownRef.current = true
-    const handleMouseUp = () => isMouseDownRef.current = false
+    const handleMouseUp = () => {
+      isMouseDownRef.current = false
+      isDraggedStartTile.current = false
+      isDraggedEndTile.current = false
+    }
     document.addEventListener('mousedown', handleMouseDown)
     document.addEventListener('mouseup', handleMouseUp)
     return () => {
@@ -35,7 +32,15 @@ const Grid = () => {
     }
   }, [])
 
-  const handleMouseDown = (row: number, col: number) => {
+  const handleDraw = useCallback((row: number, col: number) => {
+    if (![99, 100].includes(grid[row][col])) {
+      const value = drawRef.current === 'draw' ? 0 : 1
+      grid[row][col] = value
+      gridDivRefs.current[row][col].className = generateClass(row, col, value)
+    }
+  }, [grid, gridDivRefs, drawRef])
+
+  const handleMouseDown = useCallback((row: number, col: number) => {
     if (inProgressRef.current) return
     if (grid[row][col] === 99) {
       isDraggedStartTile.current = true
@@ -46,9 +51,9 @@ const Grid = () => {
       return
     }
     handleDraw(row, col)
-  }
+  }, [grid, handleDraw, inProgressRef])
 
-  const handleMouseOver = (row: number, col: number) => {
+  const handleMouseOver = useCallback((row: number, col: number) => {
     if (inProgressRef.current) return
     if (!isMouseDownRef.current) return
     if (isDraggedStartTile.current || isDraggedEndTile.current) {
@@ -65,14 +70,9 @@ const Grid = () => {
       return
     }
     handleDraw(row, col)
-  }
+  }, [grid, gridDivRefs, handleDraw, inProgressRef])
 
-  const handleMouseUp = () => {
-    isDraggedStartTile.current = false
-    isDraggedEndTile.current = false
-  }
-
-  return (
+  return useMemo(() => (
     <div>
       {grid.map((arrRow, row) => (
         <div key={`grid-${row}`} className="flex max-w-full max-h-full">
@@ -84,13 +84,12 @@ const Grid = () => {
               style={{ width: cellSize, height: cellSize }}
               onMouseDown={() => handleMouseDown(row, col)}
               onMouseOver={() => handleMouseOver(row, col)}
-              onMouseUp={() => handleMouseUp()}
             />
           )}
         </div>
       ))}
     </div>
-  )
+  ), [cellSize, grid, gridDivRefs, handleMouseDown, handleMouseOver])
 }
 
 export default Grid
