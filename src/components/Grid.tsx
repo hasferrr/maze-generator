@@ -1,28 +1,24 @@
 import { useEffect, useRef } from 'react'
 import { useGridContext } from '../hooks/useGridContext'
 import { generateClass } from '../utils/generateClass'
-import { useAnimation } from '../hooks/useAnimation'
 import { useAnimationContext } from '../hooks/useAnimateContext'
-import { SinglyLinkedListQueue } from '../libs/datastructures/queue'
-import { Step } from '../types/types'
+import { findStartEnd } from '../utils/findStartEnd'
 
 const Grid = () => {
   const { gridRef, gridDivRefs } = useGridContext()
-  const { animate } = useAnimation()
   const { inProgressRef } = useAnimationContext()
 
   const isMouseDownRef = useRef(false)
+  const isDraggedStartTile = useRef(false)
+  const isDraggedEndTile = useRef(false)
 
   const grid = gridRef.current
   const cellSize = 544 / grid.length
 
   const draw = (row: number, col: number) => {
-    if (inProgressRef.current) return
-    const qq = new SinglyLinkedListQueue<Step[]>()
     if (![99, 100].includes(grid[row][col])) {
       grid[row][col] = 0
-      qq.push([{ row, col, val: 0 }])
-      animate(qq, 'draw')
+      gridDivRefs.current[row][col].className = generateClass(row, col, 0)
     }
   }
 
@@ -37,20 +33,56 @@ const Grid = () => {
     }
   }, [])
 
+  const handleMouseDown = (row: number, col: number) => {
+    if (inProgressRef.current) return
+    if (grid[row][col] === 99) {
+      isDraggedStartTile.current = true
+      return
+    }
+    if (grid[row][col] === 100) {
+      isDraggedEndTile.current = true
+      return
+    }
+    draw(row, col)
+  }
+
+  const handleMouseOver = (row: number, col: number) => {
+    if (inProgressRef.current) return
+    if (!isMouseDownRef.current) return
+    if (isDraggedStartTile.current || isDraggedEndTile.current) {
+      if ([0, 99, 100].includes(grid[row][col])) {
+        return
+      }
+      const { start, end } = findStartEnd(grid)
+      const newValue = isDraggedStartTile.current ? 99 : 100
+      const [oldX, oldY] = isDraggedStartTile.current ? start : end
+      grid[oldX][oldY] = 1
+      grid[row][col] = newValue
+      gridDivRefs.current[oldX][oldY].className = generateClass(oldX, oldY, 1, true)
+      gridDivRefs.current[row][col].className = generateClass(row, col, newValue, true)
+      return
+    }
+    draw(row, col)
+  }
+
+  const handleMouseUp = () => {
+    isDraggedStartTile.current = false
+    isDraggedEndTile.current = false
+  }
+
   return (
     <div>
-      {grid.map((arrRow, r) => (
-        <div key={`grid-${r}`} className="flex max-w-full max-h-full">
-          {arrRow.map((val, c) =>
+      {grid.map((arrRow, row) => (
+        <div key={`grid-${row}`} className="flex max-w-full max-h-full">
+          {arrRow.map((val, col) =>
             <div
-              key={`${r}-${c}`}
-              ref={(el) => gridDivRefs.current[r][c] = el!}
-              className={generateClass(r, c, val)}
+              key={`${row}-${col}`}
+              ref={(el) => gridDivRefs.current[row][col] = el!}
+              className={generateClass(row, col, val)}
               style={{ width: cellSize, height: cellSize }}
-              onMouseDown={() => draw(r, c)}
-              onMouseOver={() => {
-                if (isMouseDownRef.current) draw(r, c)
-              }}
+              onMouseDown={() => handleMouseDown(row, col)}
+              onMouseOver={() => handleMouseOver(row, col)}
+              onMouseUp={() => handleMouseUp()}
             />
           )}
         </div>
