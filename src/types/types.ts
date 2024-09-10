@@ -19,3 +19,4 @@ export type PathfindingName = 'bfs' | 'dfs' | 'a-star' | 'greedy-bfs'
 export type MazeGeneratorName = 'prim' | 'rec-back' | 'hunt-kill' | 'org-shift'
 
 export type HeuristicType = 'manhattan' | 'euclidean'
+export type InformedSearchType = 'a-star' | 'greedy-bfs'

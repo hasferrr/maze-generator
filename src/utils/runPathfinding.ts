@@ -1,6 +1,7 @@
 import { aStar } from '../libs/algorithms/pathfinder/a-star'
 import { bfs } from '../libs/algorithms/pathfinder/bfs'
 import { dfs } from '../libs/algorithms/pathfinder/dfs'
+import { greedyBfs } from '../libs/algorithms/pathfinder/greedy-bfs'
 import { GridValues, HeuristicType, PathfindingName, StepListQueue } from '../types/types'
 import { findStartEnd } from './gridUtils'
 
@@ -14,6 +15,9 @@ export const runPathfinding = (name: PathfindingName, grid: GridValues[][], heur
   }
   if (name === 'dfs') {
     return dfs(grid, pos.start, pos.end)
+  }
+  if (name === 'greedy-bfs') {
+    return greedyBfs(grid, pos.start, pos.end, heuristic, 'greedy-bfs')
   }
   return null
 }

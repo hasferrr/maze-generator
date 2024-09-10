@@ -54,7 +54,7 @@ const Buttons = () => {
       return
     }
     if (!inProgressRef.current) {
-      if (pathfindingName === 'a-star' && heuristic === null) {
+      if (['a-star', 'greedy-bfs'].includes(pathfindingName) && heuristic === null) {
         setHeuristic('manhattan')
       }
       if (anyVisitedCell(gridRef.current)) {
@@ -67,7 +67,7 @@ const Buttons = () => {
 
   const handleSelectAlgorithm = (name: PathfindingName) => {
     if (inProgressRef.current) return
-    if (!['a-star'].includes(name)) {
+    if (!['a-star', 'greedy-bfs'].includes(name)) {
       setHeuristic(null)
     }
     setPathfindingName(name)
@@ -134,7 +134,7 @@ const Buttons = () => {
             <Dropdown.Item onClick={() => handleSelectAlgorithm('a-star')}>
               A* Search
             </Dropdown.Item>
-            <Dropdown.Item disabled>
+            <Dropdown.Item onClick={() => handleSelectAlgorithm('greedy-bfs')}>
               Greedy Best-First Search
             </Dropdown.Item>
             <Dropdown.Item onClick={() => handleSelectAlgorithm('bfs')}>
@@ -149,7 +149,7 @@ const Buttons = () => {
           <Dropdown.Toggle
             variant="dark"
             className="w-[115px]"
-            disabled={!['a-star'].includes(pathfindingName!)}
+            disabled={!['a-star', 'greedy-bfs'].includes(pathfindingName!)}
           >
             {heuristic ? heuristic[0].toUpperCase() + heuristic.slice(1) : 'Heuristic'}
           </Dropdown.Toggle>
