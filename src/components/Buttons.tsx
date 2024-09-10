@@ -112,13 +112,16 @@ const Buttons = () => {
             <Dropdown.Item onClick={() => handleGenerate('prim')}>
               Prim's Algorithm
             </Dropdown.Item>
-            <Dropdown.Item disabled>
+            <Dropdown.Item onClick={() => handleGenerate('kruskal')}>
+              Kruskal's Algorithm
+            </Dropdown.Item>
+            <Dropdown.Item disabled hidden>
               Recursive Backtracking
             </Dropdown.Item>
-            <Dropdown.Item disabled>
+            <Dropdown.Item disabled hidden>
               Hunt and Kill
             </Dropdown.Item>
-            <Dropdown.Item disabled>
+            <Dropdown.Item disabled hidden>
               Origin Shift
             </Dropdown.Item>
           </Dropdown.Menu>
