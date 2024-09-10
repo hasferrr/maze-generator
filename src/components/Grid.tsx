@@ -35,8 +35,10 @@ const Grid = () => {
   const handleDraw = useCallback((row: number, col: number) => {
     if (![99, 100].includes(grid[row][col])) {
       const value = drawRef.current === 'draw' ? 0 : 1
-      grid[row][col] = value
-      gridDivRefs.current[row][col].className = generateClass(row, col, value)
+      if (grid[row][col] !== value) {
+        grid[row][col] = value
+        gridDivRefs.current[row][col].className = generateClass(row, col, value)
+      }
     }
   }, [grid, gridDivRefs, drawRef])
 
