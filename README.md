@@ -3,6 +3,7 @@
 Maze Generator
 
 - [x] Prim's Algorithm
+- [x] Kruskal's Algorithm
 - [ ] Recursive Backtracking (DFS)
 - [ ] Hunt and Kill
 - [ ] Origin Shift
