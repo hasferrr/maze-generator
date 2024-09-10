@@ -140,7 +140,7 @@ const Buttons = () => {
             <Dropdown.Item onClick={() => handleSelectAlgorithm('bfs')}>
               Breadth First Search
             </Dropdown.Item>
-            <Dropdown.Item disabled>
+            <Dropdown.Item onClick={() => handleSelectAlgorithm('dfs')}>
               Depth First Search
             </Dropdown.Item>
           </Dropdown.Menu>
