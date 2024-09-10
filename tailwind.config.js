@@ -19,7 +19,7 @@ export default {
           '0%': {
             backgroundColor: '#0f172a',
           },
-          '100%': {
+          '30%': {
             backgroundColor: '#e2e8f0',
           },
         },

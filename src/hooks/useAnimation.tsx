@@ -127,7 +127,7 @@ export const useAnimation = () => {
   }
 
   const clearGrid = () => {
-    updateGrid((value) => ![99, 100].includes(value), 1)
+    updateGrid((value) => ![99, 100].includes(value) && value !== 1, 1)
     const se = findStartEnd(gridRef.current)
     if (se.start[0] === -1 || se.end[0] === -1) {
       const ROWS = gridRef.current.length
