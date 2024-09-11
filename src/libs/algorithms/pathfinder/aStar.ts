@@ -10,7 +10,8 @@ export const aStar = (
   grid: GridValues[][],
   start: PositionXY,
   end: PositionXY,
+  direction: 4 | 8,
   heuristic: HeuristicType,
 ): StepListQueue => {
-  return greedyBfs(grid, start, end, heuristic, 'a-star')
+  return greedyBfs(grid, start, end, direction, heuristic, 'a-star')
 }

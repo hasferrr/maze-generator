@@ -20,6 +20,7 @@ const Buttons = () => {
   const [algoVariant, setAlgoVariant] = useState('dark')
   const [clearVariant, setClearVariant] = useState('dark')
   const [heuristic, setHeuristic] = useState<HeuristicType | null>(null)
+  const [direction, setDirection] = useState<4 | 8>(4)
 
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
@@ -61,7 +62,7 @@ const Buttons = () => {
         setClearVariant('danger')
         return
       }
-      animate(runPathfinding(pathfindingName, gridRef.current, heuristic ?? 'manhattan'), 'solve')
+      animate(runPathfinding(pathfindingName, gridRef.current, heuristic ?? 'manhattan', direction), 'solve')
     }
   }
 
@@ -76,6 +77,10 @@ const Buttons = () => {
 
   const handleChangeHeuristic = (type: HeuristicType) => {
     if (!inProgressRef.current) setHeuristic(type)
+  }
+
+  const handleChangeDirection = (d: 4 | 8) => {
+    if (!inProgressRef.current) setDirection(d)
   }
 
   return (
@@ -162,6 +167,17 @@ const Buttons = () => {
             </Dropdown.Item>
             <Dropdown.Item onClick={() => handleChangeHeuristic('euclidean')}>
               Euclidean
+            </Dropdown.Item>
+          </Dropdown.Menu>
+        </Dropdown>
+        <Dropdown drop="up-centered">
+          <Dropdown.Toggle variant="dark">{direction}D</Dropdown.Toggle>
+          <Dropdown.Menu>
+            <Dropdown.Item onClick={() => handleChangeDirection(4)}>
+              4 Directions
+            </Dropdown.Item>
+            <Dropdown.Item onClick={() => handleChangeDirection(8)}>
+              8 Directions
             </Dropdown.Item>
           </Dropdown.Menu>
         </Dropdown>

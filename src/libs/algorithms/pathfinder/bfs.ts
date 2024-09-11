@@ -10,20 +10,22 @@ import { SinglyLinkedListQueue } from '../../datastructures/queue'
  * - start (99)
  * - end (100)
  */
-export const bfs = (grid: GridValues[][], start: PositionXY, end: PositionXY): StepListQueue => {
+export const bfs = (grid: GridValues[][], start: PositionXY, end: PositionXY, direction: 4 | 8): StepListQueue => {
   const ROWS = grid.length
   const COLS = grid[0].length
-  const DIRECTIONS = [
-    [0, 1], [1, 0], [0, -1], [-1, 0]
-  ]
+  const DIRECTIONS = direction === 8
+    ? [[0, 1], [1, 0], [0, -1], [-1, 0], [1, 1], [1, -1], [-1, 1], [-1, -1]]
+    : [[0, 1], [1, 0], [0, -1], [-1, 0]]
 
   let shortest = 0
   let solved = false
 
   const steps: StepListQueue = new SinglyLinkedListQueue()
   const previous: (PositionXY | null)[][] = Array.from({ length: ROWS }, () => Array(COLS))
+  const queued: boolean[][] = Array.from({ length: ROWS }, () => Array(COLS))
   const queue = new SinglyLinkedListQueue<PositionXY>()
 
+  queued[start[0]][start[1]] = true
   previous[start[0]][start[1]] = null
   queue.push(start)
 
@@ -63,10 +65,15 @@ export const bfs = (grid: GridValues[][], start: PositionXY, end: PositionXY): S
         if (nx < 0 || ny < 0 || nx >= ROWS || ny >= COLS) {
           continue
         }
-        if ([1, 99, 100].includes(grid[nx][ny])) {
-          previous[nx][ny] = [x, y]
-          queue.push([nx, ny])
+        if (![1, 99, 100].includes(grid[nx][ny])) {
+          continue
         }
+        if (queued[nx][ny]) {
+          continue
+        }
+        queued[nx][ny] = true
+        previous[nx][ny] = [x, y]
+        queue.push([nx, ny])
       }
     }
 

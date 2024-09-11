@@ -26,14 +26,15 @@ export const greedyBfs = (
   grid: GridValues[][],
   start: PositionXY,
   end: PositionXY,
+  direction: 4 | 8,
   heuristic: HeuristicType,
   informedSearch: InformedSearchType,
 ): StepListQueue => {
   const ROWS = grid.length
   const COLS = grid[0].length
-  const DIRECTIONS = [
-    [0, 1], [1, 0], [0, -1], [-1, 0]
-  ]
+  const DIRECTIONS = direction === 8
+    ? [[0, 1], [1, 0], [0, -1], [-1, 0], [1, 1], [1, -1], [-1, 1], [-1, -1]]
+    : [[0, 1], [1, 0], [0, -1], [-1, 0]]
 
   const steps: StepListQueue = new SinglyLinkedListQueue()
   const previous: (PositionXY | null)[][] = Array.from({ length: ROWS }, () => Array(COLS))

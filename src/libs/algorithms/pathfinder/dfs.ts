@@ -10,14 +10,14 @@ import { SinglyLinkedListQueue } from '../../datastructures/queue'
  * - start (99)
  * - end (100)
  */
-export const dfs = (grid: GridValues[][], start: PositionXY, end: PositionXY): StepListQueue => {
+export const dfs = (grid: GridValues[][], start: PositionXY, end: PositionXY, direction: 4 | 8): StepListQueue => {
   const steps: StepListQueue = new SinglyLinkedListQueue()
 
   const ROWS = grid.length
   const COLS = grid[0].length
-  const DIRECTIONS = [
-    [0, 1], [1, 0], [0, -1], [-1, 0]
-  ]
+  const DIRECTIONS = direction === 8
+    ? [[0, 1], [1, 0], [0, -1], [-1, 0], [1, 1], [1, -1], [-1, 1], [-1, -1]]
+    : [[0, 1], [1, 0], [0, -1], [-1, 0]]
 
   const previous: (PositionXY | null)[][] = Array.from({ length: ROWS }, () => Array(COLS))
   previous[start[0]][start[1]] = null
