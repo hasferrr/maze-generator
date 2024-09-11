@@ -8,6 +8,7 @@ interface PosNode {
   cost: number
   heuristic: number
   total: number
+  insertionOrder: number
 }
 
 /**
@@ -54,14 +55,19 @@ export const greedyBfs = (
     heuristicFn = () => 0
   }
 
-  // priority is f(x), where f(x) = g(x) + h(x)
+  // the priority is: f(x) -> last PosNode added -> h(x)
+  // where f(x) = g(x) + h(x)
   const minHeap = new Heap<PosNode>((a, b) => {
     if (a.total === b.total) {
-      return (a.cost - b.cost) || (a.heuristic - b.heuristic)
+      if (a.heuristic === b.heuristic) {
+        return (b.insertionOrder - a.insertionOrder)
+      }
+      return (a.heuristic - b.heuristic)
     }
     return a.total - b.total
   })
 
+  let insertionOrder = 0
   previous.set(`${start[0]},${start[1]}`, null)
   const heuristicStart = heuristicFn(start, end)
   minHeap.insert({
@@ -69,6 +75,7 @@ export const greedyBfs = (
     cost: 0,
     heuristic: heuristicStart,
     total: heuristicStart,
+    insertionOrder: insertionOrder++,
   })
 
   while (!minHeap.isEmpty()) {
@@ -118,6 +125,7 @@ export const greedyBfs = (
         cost: nextCost,
         heuristic: heuristicVal,
         total: nextCost + heuristicVal,
+        insertionOrder: insertionOrder++,
       })
     }
   }
