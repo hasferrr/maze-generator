@@ -5,14 +5,15 @@ import { SinglyLinkedListQueue } from '../../datastructures/queue'
 
 interface PosNode {
   pos: PositionXY
-  cost: number
   heuristic: number
   total: number
   insertionOrder: number
 }
 
 /**
- * Greedy Best-First Search Algorithm only considers the estimate of the cost to reach the goal h(x)
+ * Greedy Best-First Search Algorithm only considers:
+ * - the estimated cost to reach the goal from the node, h(x)
+ *
  * Implemented with marking of:
  * - walls (0s)
  * - paths/open (1s)
@@ -36,6 +37,7 @@ export const greedyBfs = (
 
   const steps: StepListQueue = new SinglyLinkedListQueue()
   const previous = new Map<string, PositionXY | null>()
+  const costs: number[][] = Array.from({ length: ROWS }, () => Array(COLS))
 
   // g(x)
   let calculateCost: (prevCost: number) => number
@@ -55,24 +57,24 @@ export const greedyBfs = (
     heuristicFn = () => 0
   }
 
-  // the priority is: f(x) -> last PosNode added -> h(x)
+  // the priority is: smallest f(x) -> last PosNode added -> highest h(x)
   // where f(x) = g(x) + h(x)
   const minHeap = new Heap<PosNode>((a, b) => {
     if (a.total === b.total) {
       if (a.heuristic === b.heuristic) {
         return (b.insertionOrder - a.insertionOrder)
       }
-      return (a.heuristic - b.heuristic)
+      return (b.heuristic - a.heuristic)
     }
     return a.total - b.total
   })
 
   let insertionOrder = 0
   previous.set(`${start[0]},${start[1]}`, null)
+  costs[start[0]][start[1]] = 0
   const heuristicStart = heuristicFn(start, end)
   minHeap.insert({
     pos: start,
-    cost: 0,
     heuristic: heuristicStart,
     total: heuristicStart,
     insertionOrder: insertionOrder++,
@@ -117,12 +119,15 @@ export const greedyBfs = (
       if (![1, 99, 100].includes(grid[nx][ny])) {
         continue
       }
-      const nextCost = calculateCost(curr.cost)
+      const nextCost = calculateCost(costs[x][y])
+      if (costs[nx][ny] && costs[nx][ny] < nextCost) {
+        continue
+      }
       const heuristicVal = heuristicFn([nx, ny], end)
       previous.set(`${nx},${ny}`, curr.pos)
+      costs[nx][ny] = nextCost
       minHeap.insert({
         pos: [nx, ny],
-        cost: nextCost,
         heuristic: heuristicVal,
         total: nextCost + heuristicVal,
         insertionOrder: insertionOrder++,

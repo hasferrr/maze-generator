@@ -3,8 +3,8 @@ import { greedyBfs } from './greedyBfs'
 
 /**
  * A* Search Algorithm is an extension of the Greedy Best-First Search, considering both:
- * - Cost to reach a node g(x) and
- * - Estimate of the cost to reach the goal h(x)
+ * - the cost to reach a node from the start, g(x), and
+ * - the estimated cost to reach the goal from the node, h(x)
  */
 export const aStar = (
   grid: GridValues[][],
