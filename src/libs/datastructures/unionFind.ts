@@ -35,7 +35,7 @@ class UnionFind {
       this.parent.set(p1, p2)
     } else {
       this.parent.set(p2, p1)
-      this.rank.set(p2, this.rank.get(p2)! + 1)
+      this.rank.set(p1, p1rank + 1)
     }
 
     this.count += 1
