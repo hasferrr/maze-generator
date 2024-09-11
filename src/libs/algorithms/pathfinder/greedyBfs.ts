@@ -11,7 +11,8 @@ interface PosNode {
 }
 
 /**
- * Greedy Best-First Search Algorithm with marking of:
+ * Greedy Best-First Search Algorithm only considers the estimate of the cost to reach the goal h(x)
+ * Implemented with marking of:
  * - walls (0s)
  * - paths/open (1s)
  * - visited/closed (2s)
@@ -23,7 +24,7 @@ export const greedyBfs = (
   grid: GridValues[][],
   start: PositionXY,
   end: PositionXY,
-  type: HeuristicType,
+  heuristic: HeuristicType,
   informedSearch: InformedSearchType,
 ): StepListQueue => {
   const ROWS = grid.length
@@ -36,16 +37,22 @@ export const greedyBfs = (
   const previous = new Map<string, PositionXY | null>()
 
   // g(x)
-  const calculateCost =
-    informedSearch === 'greedy-bfs' ? () => 0
-      : informedSearch === 'a-star' ? (prevCost: number) => prevCost + 1
-        : () => 0
+  let calculateCost: (prevCost: number) => number
+  if (informedSearch === 'a-star') {
+    calculateCost = (prevCost: number) => prevCost + 1
+  } else {
+    calculateCost = () => 0
+  }
 
   // h(x)
-  const heuristicFn =
-    type === 'manhattan' ? manhattanDistance
-      : type === 'euclidean' ? euclideanDistance
-        : () => 0
+  let heuristicFn: (pos1: PositionXY, pos2: PositionXY) => number
+  if (heuristic === 'manhattan') {
+    heuristicFn = manhattanDistance
+  } else if (heuristic === 'euclidean') {
+    heuristicFn = euclideanDistance
+  } else {
+    heuristicFn = () => 0
+  }
 
   // priority is f(x), where f(x) = g(x) + h(x)
   const minHeap = new Heap<PosNode>((a, b) => {
@@ -56,7 +63,7 @@ export const greedyBfs = (
   })
 
   previous.set(`${start[0]},${start[1]}`, null)
-  const heuristicStart = heuristicFn(start[0], end[0], start[1], end[1])
+  const heuristicStart = heuristicFn(start, end)
   minHeap.insert({
     pos: start,
     cost: 0,
@@ -104,7 +111,7 @@ export const greedyBfs = (
         continue
       }
       const nextCost = calculateCost(curr.cost)
-      const heuristicVal = heuristicFn(nx, end[0], ny, end[1])
+      const heuristicVal = heuristicFn([nx, ny], end)
       previous.set(`${nx},${ny}`, curr.pos)
       minHeap.insert({
         pos: [nx, ny],

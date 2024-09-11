@@ -1,7 +1,7 @@
-import { aStar } from '../libs/algorithms/pathfinder/a-star'
+import { aStar } from '../libs/algorithms/pathfinder/aStar'
 import { bfs } from '../libs/algorithms/pathfinder/bfs'
 import { dfs } from '../libs/algorithms/pathfinder/dfs'
-import { greedyBfs } from '../libs/algorithms/pathfinder/greedy-bfs'
+import { greedyBfs } from '../libs/algorithms/pathfinder/greedyBfs'
 import { GridValues, HeuristicType, PathfindingName, StepListQueue } from '../types/types'
 import { findStartEnd } from './gridUtils'
 
