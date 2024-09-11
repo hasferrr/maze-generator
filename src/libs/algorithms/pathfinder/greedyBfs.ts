@@ -1,5 +1,5 @@
 import { GridValues, HeuristicType, InformedSearchType, PositionXY, Step, StepListQueue } from '../../../types/types'
-import { euclideanDistance, manhattanDistance } from '../../../utils/heuristics'
+import { euclideanDistance, manhattanDistance } from './heuristics'
 import { Heap } from '../../datastructures/heap'
 import { SinglyLinkedListQueue } from '../../datastructures/queue'
 
@@ -36,7 +36,7 @@ export const greedyBfs = (
   ]
 
   const steps: StepListQueue = new SinglyLinkedListQueue()
-  const previous = new Map<string, PositionXY | null>()
+  const previous: (PositionXY | null)[][] = Array.from({ length: ROWS }, () => Array(COLS))
   const costs: number[][] = Array.from({ length: ROWS }, () => Array(COLS))
 
   // g(x)
@@ -70,7 +70,7 @@ export const greedyBfs = (
   })
 
   let insertionOrder = 0
-  previous.set(`${start[0]},${start[1]}`, null)
+  previous[start[0]][start[1]] = null
   costs[start[0]][start[1]] = 0
   const heuristicStart = heuristicFn(start, end)
   minHeap.insert({
@@ -89,12 +89,12 @@ export const greedyBfs = (
 
     if (x === end[0] && y === end[1]) {
       const stepList: Step[] = []
-      let backtrack = previous.get(`${x},${y}`)
+      let backtrack = previous[x][y]
       let count = 0
       while (backtrack) {
         const [px, py] = backtrack
         grid[px][py] = 3
-        backtrack = previous.get(`${px},${py}`)
+        backtrack = previous[px][py]
         stepList.push({ row: px, col: py, val: 3 })
         count++
       }
@@ -124,7 +124,7 @@ export const greedyBfs = (
         continue
       }
       const heuristicVal = heuristicFn([nx, ny], end)
-      previous.set(`${nx},${ny}`, curr.pos)
+      previous[nx][ny] = curr.pos
       costs[nx][ny] = nextCost
       minHeap.insert({
         pos: [nx, ny],

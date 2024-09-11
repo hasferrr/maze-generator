@@ -1,4 +1,4 @@
-import { PositionXY } from '../types/types'
+import { PositionXY } from '../../../types/types'
 
 export const manhattanDistance = (pos1: PositionXY, pos2: PositionXY): number => {
   const [x1, y1] = pos1
