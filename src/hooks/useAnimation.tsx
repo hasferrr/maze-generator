@@ -142,7 +142,7 @@ export const useAnimation = () => {
   }
 
   const clearVisited = () => {
-    updateGrid((value) => [2, 3].includes(value), 1)
+    updateGrid((value) => [2, 3].includes(value) && value !== 1, 1)
   }
 
   return {
