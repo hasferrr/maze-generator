@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react'
+import { useState } from 'react'
 import { AnimationType, GridValues, Step, StepListQueue } from '../types/types'
 import { useGridContext } from './useGridContext'
 import { generateClass } from '../utils/generateClass'
@@ -8,10 +8,8 @@ import { findStartEnd } from '../utils/gridUtils'
 
 export const useAnimation = () => {
   const { gridRef, gridDivRefs } = useGridContext()
-  const { stepsListQueueRef, inProgressRef, delayRef } = useAnimationContext()
+  const { stepsListQueueRef, inProgressRef, delayRef, instantRef, timeoutListRef } = useAnimationContext()
 
-  const instantRef = useRef(false)
-  const timeoutListRef = useRef<ReturnType<typeof setTimeout>[]>([])
   const [multiplier, setMultiplier] = useState(1)
 
   const animate = (steps: StepListQueue | null, type: AnimationType) => {
@@ -160,6 +158,7 @@ export const useAnimation = () => {
     animate,
     clearGrid,
     clearVisited,
+    clearState,
     speed: {
       multiplier,
       increase: increaseSpeed,

@@ -1,12 +1,14 @@
+import { useState } from 'react'
 import { Modal, Button, Form, InputGroup, FloatingLabel } from 'react-bootstrap'
 import { useGridContext } from '../hooks/useGridContext'
-import { useState } from 'react'
+import { useAnimation } from '../hooks/useAnimation'
 
 const Settings = ({ show, onHide }: {
   show: boolean
   onHide: () => void
 }) => {
   const { size, setSize } = useGridContext()
+  const { clearState } = useAnimation()
 
   const [tempSize, setTempSize] = useState<number | undefined>(size[0])
   const [ratio, setRatio] = useState<'1:1' | '1:2'>('1:2')
@@ -19,6 +21,7 @@ const Settings = ({ show, onHide }: {
   }
 
   const handleApply = () => {
+    clearState()
     setSize([newSize, newSize * (ratio === '1:1' ? 1 : 2)])
     onHide()
   }
