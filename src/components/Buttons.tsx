@@ -9,6 +9,7 @@ import { pathfindingShort } from '../utils/algorithmNameMap'
 import { runMazeGenerator } from '../utils/runMazeGenerator'
 import { anyVisitedCell } from '../utils/gridUtils'
 import { HeuristicType, MazeGeneratorName, PathfindingName } from '../types/types'
+import Settings from './Settings'
 
 const Buttons = () => {
   const { gridRef } = useGridContext()
@@ -21,6 +22,7 @@ const Buttons = () => {
   const [clearVariant, setClearVariant] = useState('dark')
   const [heuristic, setHeuristic] = useState<HeuristicType | null>(null)
   const [direction, setDirection] = useState<4 | 8>(4)
+  const [showSettings, setShowSettings] = useState(false)
 
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
@@ -85,7 +87,15 @@ const Buttons = () => {
 
   return (
     <div className="flex">
+      <Settings show={showSettings} onHide={() => setShowSettings(false)} />
       <div className="flex w-[30rem] justify-end">
+        <Button
+          variant="dark"
+          className="w-20"
+          onClick={() => setShowSettings(true)}
+        >
+          Settings
+        </Button>
         <ToggleButtonGroup
           type="radio"
           name="draw"
@@ -97,7 +107,7 @@ const Buttons = () => {
           <ToggleButton variant="dark" id="erase" value="erase">Erase</ToggleButton>
         </ToggleButtonGroup>
         <Dropdown drop="up-centered">
-          <Dropdown.Toggle variant={clearVariant}>
+          <Dropdown.Toggle variant={clearVariant} className="w-20">
             Clear
           </Dropdown.Toggle>
           <Dropdown.Menu>
@@ -132,7 +142,7 @@ const Buttons = () => {
           </Dropdown.Menu>
         </Dropdown>
       </div>
-      <Button variant="success" onClick={handleSolve}>Solve</Button>
+      <Button variant="success" className="w-20" onClick={handleSolve}>Solve</Button>
       <div className="flex w-[30rem]">
         <Dropdown drop="up-centered">
           <Dropdown.Toggle variant={algoVariant} className="w-40">
@@ -171,7 +181,7 @@ const Buttons = () => {
           </Dropdown.Menu>
         </Dropdown>
         <Dropdown drop="up-centered">
-          <Dropdown.Toggle variant="dark">{direction}D</Dropdown.Toggle>
+          <Dropdown.Toggle variant="dark" className="w-16">{direction}D</Dropdown.Toggle>
           <Dropdown.Menu>
             <Dropdown.Item onClick={() => handleChangeDirection(4)}>
               4 Directions
