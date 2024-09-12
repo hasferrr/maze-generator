@@ -6,7 +6,7 @@ interface AnimationContextType {
   inProgressRef: React.MutableRefObject<AnimationType | null>
   delayRef: React.MutableRefObject<number>
   instantRef: React.MutableRefObject<boolean>
-  timeoutListRef: React.MutableRefObject<NodeJS.Timeout[]>
+  timeoutListRef: React.MutableRefObject<ReturnType<typeof setTimeout>[]>
 }
 
 const AnimationContext = createContext<AnimationContextType>(null!)
