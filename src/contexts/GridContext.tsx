@@ -33,13 +33,8 @@ export const GridContextProvider = ({ children }: { children?: React.ReactNode }
     const newGridDivs = createEmptyGrid<HTMLDivElement>(r, c)
     const ROWS = newGrid.length
     const COLS = newGrid[0].length
-    if (r === 1 && c === 1) {
-      newGrid[ROWS - 1][0] = 99
-      newGrid[0][COLS - 1] = 100
-    } else {
-      newGrid[ROWS - 2][1] = 99
-      newGrid[1][COLS - 2] = 100
-    }
+    newGrid[ROWS - 2][1] = 99
+    newGrid[1][COLS - 2] = 100
     setGrid({ current: newGrid })
     setGridDivs({ current: newGridDivs })
   }, [size])

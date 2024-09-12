@@ -12,7 +12,7 @@ const Settings = ({ show, onHide }: {
   const [ratio, setRatio] = useState<'1:1' | '1:2'>('1:2')
 
   const newSize = !tempSize
-    ? size[0] : (tempSize < 1 ? 1 : (tempSize > 32 ? 32 : tempSize))
+    ? size[0] : (tempSize < 2 ? 2 : (tempSize > 32 ? 32 : tempSize))
 
   const handleSetTempSize = (n?: number) => {
     setTempSize(Number.isNaN(n) ? undefined : n)
@@ -42,7 +42,7 @@ const Settings = ({ show, onHide }: {
           </InputGroup.Text>
           <Form.Control
             className="text-center"
-            placeholder="10"
+            placeholder="2 to 32"
             value={tempSize ? tempSize : ''}
             onChange={(e) => handleSetTempSize(Number(e.target.value))}
           />

@@ -80,9 +80,9 @@ const Grid = () => {
         <div key={`grid-${row}`} className="flex max-w-full max-h-full">
           {arrRow.map((val, col) =>
             <div
-              key={`${row}-${col}`}
+              key={`${Math.random()}-${row}-${col}`}
               ref={(el) => gridDivRefs.current[row][col] = el!}
-              className={generateClass(row, col, val)}
+              className={generateClass(row, col, val, true)}
               style={{ width: cellSize, height: cellSize }}
               onMouseDown={() => handleMouseDown(row, col)}
               onMouseOver={() => handleMouseOver(row, col)}
