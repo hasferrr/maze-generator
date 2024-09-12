@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Modal, Button, Form, InputGroup, FloatingLabel } from 'react-bootstrap'
+import { Modal, Button, Form, InputGroup, FloatingLabel, OverlayTrigger, Tooltip } from 'react-bootstrap'
 import { useGridContext } from '../hooks/useGridContext'
 import { useAnimation } from '../hooks/useAnimation'
 
@@ -26,6 +26,18 @@ const Settings = ({ show, onHide }: {
     onHide()
   }
 
+  const sizeInfoTooltip = (() => {
+    if (!tempSize) return <></>
+    if (tempSize < 2) return <Tooltip>Minimum is 2</Tooltip>
+    if (tempSize > 32) return <Tooltip>Maximum is 32</Tooltip>
+    return (
+      <Tooltip>
+        {'It will be '}<span className='font-bold'>{newSize}</span>
+        {'x2+1 = '}<span className='font-bold'>{newSize * 2 + 1}</span>
+      </Tooltip>
+    )
+  })()
+
   return (
     <Modal
       show={show}
@@ -41,14 +53,19 @@ const Settings = ({ show, onHide }: {
         <InputGroup className="mb-3">
           <InputGroup.Text className="flex justify-center">Size</InputGroup.Text>
           <InputGroup.Text className="w-20 flex justify-center">
-            {newSize} x {newSize * (ratio === '1:1' ? 1 : 2)}
+            {newSize * 2 + 1} x {newSize * (ratio === '1:1' ? 1 : 2) * 2 + 1}
           </InputGroup.Text>
-          <Form.Control
-            className="text-center"
-            placeholder="2 to 32"
-            value={tempSize ? tempSize : ''}
-            onChange={(e) => handleSetTempSize(Number(e.target.value))}
-          />
+          <OverlayTrigger
+            key={'top'}
+            placement={'top'}
+            overlay={sizeInfoTooltip}
+          >
+            <Form.Control
+              className="text-center"
+              value={tempSize ? tempSize : ''}
+              onChange={(e) => handleSetTempSize(Number(e.target.value))}
+            />
+          </OverlayTrigger>
         </InputGroup>
         <FloatingLabel label="Grid Ratio">
           <Form.Select value={ratio} onChange={(e) => setRatio(e.target.value as typeof ratio)}>
