@@ -10,6 +10,7 @@ export const useAnimation = () => {
   const { gridRef, gridDivRefs } = useGridContext()
   const { stepsListQueueRef, inProgressRef, delayRef } = useAnimationContext()
 
+  const instantRef = useRef(false)
   const timeoutListRef = useRef<ReturnType<typeof setTimeout>[]>([])
   const [multiplier, setMultiplier] = useState(1)
 
@@ -45,12 +46,14 @@ export const useAnimation = () => {
     if (!stepsListQueueRef.current?.length) {
       return clearState()
     }
-    const stepList = stepsListQueueRef.current.shift()!
-    stepList.forEach((step: Step) => {
-      const { row, col, val } = step
-      gridRef.current[row][col] = val
-      gridDivRefs.current[row][col].className = generateClass(row, col, val)
-    })
+    do {
+      const stepList = stepsListQueueRef.current.shift()!
+      stepList.forEach((step: Step) => {
+        const { row, col, val } = step
+        gridRef.current[row][col] = val
+        gridDivRefs.current[row][col].className = generateClass(row, col, val, instantRef.current)
+      })
+    } while (instantRef.current && stepsListQueueRef.current.length)
     timeoutListRef.current.push(setTimeout(animateLoop, delayRef.current))
   }
 
@@ -70,7 +73,9 @@ export const useAnimation = () => {
   }
 
   const increaseSpeed = () => {
-    if (multiplier === 8) {
+    if (multiplier >= 8) {
+      setMultiplier(999)
+      instantRef.current = true
       return
     }
     if (multiplier <= 0.5) {
@@ -85,7 +90,12 @@ export const useAnimation = () => {
   }
 
   const decreaseSpeed = () => {
-    if (multiplier === 1 / 2 ** 3) {
+    if (multiplier === 999) {
+      setMultiplier(8)
+      instantRef.current = false
+      return
+    }
+    if (multiplier === 1 / 2 ** 5) {
       return
     }
     if (multiplier <= 1) {
@@ -103,6 +113,7 @@ export const useAnimation = () => {
     stopAllTimeout()
     setMultiplier(1)
     delayRef.current = 10
+    instantRef.current = false
     callAnimateLoop(1)
   }
 

@@ -193,7 +193,11 @@ const Buttons = () => {
         </Dropdown>
         <ButtonGroup aria-label="Speed" className="mx-1 *:mx-0">
           <Button variant="dark" onClick={speed.decrease}>-</Button>
-          <Button variant="dark" onClick={speed.reset} className="w-12 px-0">{speed.multiplier}x</Button>
+          <Button variant="dark" onClick={speed.reset} className="w-[52px] px-0">
+            {speed.multiplier === 999
+              ? 'Instant'
+              : `${speed.multiplier}`.slice(0, 5) + 'x'}
+          </Button>
           <Button variant="dark" onClick={speed.increase}>+</Button>
         </ButtonGroup>
       </div>
