@@ -130,7 +130,7 @@ const Buttons = () => {
             <Dropdown.Item onClick={() => handleGenerate('kruskal')}>
               Kruskal's Algorithm
             </Dropdown.Item>
-            <Dropdown.Item disabled hidden>
+            <Dropdown.Item onClick={() => handleGenerate('rec-backtrack')}>
               Recursive Backtracking
             </Dropdown.Item>
             <Dropdown.Item disabled hidden>

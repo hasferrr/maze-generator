@@ -17,7 +17,7 @@ export type StepListQueue = SinglyLinkedListQueue<Step[]>
 export type AnimationType = 'generate' | 'solve' | 'reset' | 'draw'
 
 export type PathfindingName = 'bfs' | 'dfs' | 'a-star' | 'greedy-bfs'
-export type MazeGeneratorName = 'prim' | 'kruskal'
+export type MazeGeneratorName = 'prim' | 'kruskal' | 'rec-backtrack'
 
 export type HeuristicType = 'manhattan' | 'euclidean'
 export type InformedSearchType = 'a-star' | 'greedy-bfs'
