@@ -8,25 +8,25 @@ import { findStartEnd } from '../utils/gridUtils'
 
 export const useAnimation = () => {
   const { gridRef, gridDivRefs } = useGridContext()
-  const { stepsListQueueRef, inProgressRef, delayRef, instantRef, timeoutListRef } = useAnimationContext()
+  const { stepsListQueueRef, inProgress, setInProgress, delayRef, instantRef, timeoutListRef } = useAnimationContext()
 
   const [multiplier, setMultiplier] = useState(1)
 
   const animate = (steps: StepListQueue | null, type: AnimationType) => {
     if (type === 'reset') {
       stepsListQueueRef.current = steps
-      inProgressRef.current = 'reset'
+      setInProgress('reset')
       callAnimateLoop(multiplier)
       return
     }
-    if (inProgressRef.current && type !== inProgressRef.current) {
+    if (inProgress && type !== inProgress) {
       return
     }
-    if (inProgressRef.current === null) {
+    if (inProgress === null) {
       stepsListQueueRef.current = steps
     }
     if (stepsListQueueRef.current) {
-      inProgressRef.current = type
+      setInProgress(type)
       callAnimateLoop(multiplier)
     }
   }
@@ -57,7 +57,7 @@ export const useAnimation = () => {
 
   const clearState = () => {
     stopAllTimeout()
-    inProgressRef.current = null
+    setInProgress(null)
     stepsListQueueRef.current = null
   }
 

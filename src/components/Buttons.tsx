@@ -14,7 +14,7 @@ import Settings from './Settings'
 const Buttons = () => {
   const { gridRef } = useGridContext()
   const { animate, clearGrid, clearVisited, speed } = useAnimation()
-  const { inProgressRef } = useAnimationContext()
+  const { inProgress } = useAnimationContext()
   const { draw, setDraw } = useDrawContext()
 
   const [pathfindingName, setPathfindingName] = useState<PathfindingName | null>(null)
@@ -46,7 +46,7 @@ const Buttons = () => {
   }
 
   const handleGenerate = (name: MazeGeneratorName) => {
-    if (!inProgressRef.current) {
+    if (!inProgress) {
       animate(runMazeGenerator(name, gridRef.current), 'generate')
     }
   }
@@ -56,7 +56,7 @@ const Buttons = () => {
       setAlgoVariant('danger')
       return
     }
-    if (!inProgressRef.current) {
+    if (!inProgress) {
       if (['a-star', 'greedy-bfs'].includes(pathfindingName) && heuristic === null) {
         setHeuristic('manhattan')
       }
@@ -69,7 +69,7 @@ const Buttons = () => {
   }
 
   const handleSelectAlgorithm = (name: PathfindingName) => {
-    if (inProgressRef.current) return
+    if (inProgress) return
     if (!['a-star', 'greedy-bfs'].includes(name)) {
       setHeuristic(null)
     }
@@ -78,11 +78,11 @@ const Buttons = () => {
   }
 
   const handleChangeHeuristic = (type: HeuristicType) => {
-    if (!inProgressRef.current) setHeuristic(type)
+    if (!inProgress) setHeuristic(type)
   }
 
   const handleChangeDirection = (d: 4 | 8) => {
-    if (!inProgressRef.current) setDirection(d)
+    if (!inProgress) setDirection(d)
   }
 
   return (
@@ -142,7 +142,14 @@ const Buttons = () => {
           </Dropdown.Menu>
         </Dropdown>
       </div>
-      <Button variant="success" className="w-20" onClick={handleSolve}>Solve</Button>
+      <Button
+        variant="success"
+        className="w-20"
+        onClick={handleSolve}
+        disabled={!!inProgress}
+      >
+        Solve
+      </Button>
       <div className="flex w-[30rem]">
         <Dropdown drop="up-centered">
           <Dropdown.Toggle variant={algoVariant} className="w-40">
