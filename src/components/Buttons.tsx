@@ -19,7 +19,6 @@ const Buttons = () => {
 
   const [pathfindingName, setPathfindingName] = useState<PathfindingName | null>(null)
   const [algoVariant, setAlgoVariant] = useState('dark')
-  const [clearVariant, setClearVariant] = useState('dark')
   const [heuristic, setHeuristic] = useState<HeuristicType | null>(null)
   const [direction, setDirection] = useState<4 | 8>(4)
   const [showSettings, setShowSettings] = useState(false)
@@ -38,7 +37,6 @@ const Buttons = () => {
   const handleDrawChange = (val: 'draw' | 'erase') => setDraw(val)
 
   const handleClear = (type: 'all' | 'visited') => {
-    setClearVariant('dark')
     const clear = type === 'all'
       ? clearGrid
       : clearVisited
@@ -60,11 +58,18 @@ const Buttons = () => {
       if (['a-star', 'greedy-bfs'].includes(pathfindingName) && heuristic === null) {
         setHeuristic('manhattan')
       }
+      const run = () => animate(
+        runPathfinding(
+          pathfindingName,
+          gridRef.current,
+          heuristic ?? 'manhattan',
+          direction,
+        ), 'solve')
       if (anyVisitedCell(gridRef.current)) {
-        setClearVariant('danger')
+        clearVisited(run)
         return
       }
-      animate(runPathfinding(pathfindingName, gridRef.current, heuristic ?? 'manhattan', direction), 'solve')
+      run()
     }
   }
 
@@ -107,7 +112,7 @@ const Buttons = () => {
           <ToggleButton variant="dark" id="erase" value="erase">Erase</ToggleButton>
         </ToggleButtonGroup>
         <Dropdown drop="up-centered">
-          <Dropdown.Toggle variant={clearVariant} className="w-20">
+          <Dropdown.Toggle variant="dark" className="w-20">
             Clear
           </Dropdown.Toggle>
           <Dropdown.Menu>

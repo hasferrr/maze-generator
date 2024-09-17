@@ -12,11 +12,15 @@ export const useAnimation = () => {
 
   const [multiplier, setMultiplier] = useState(1)
 
-  const animate = (steps: StepListQueue | null, type: AnimationType) => {
+  const animate = (
+    steps: StepListQueue | null,
+    type: AnimationType,
+    callback?: () => void,
+  ) => {
     if (type === 'reset') {
       stepsListQueueRef.current = steps
       setInProgress('reset')
-      callAnimateLoop(multiplier)
+      callAnimateLoop(multiplier, callback)
       return
     }
     if (inProgress && type !== inProgress) {
@@ -27,22 +31,26 @@ export const useAnimation = () => {
     }
     if (stepsListQueueRef.current) {
       setInProgress(type)
-      callAnimateLoop(multiplier)
+      callAnimateLoop(multiplier, callback)
     }
   }
 
-  const callAnimateLoop = (n: number) => {
+  const callAnimateLoop = (n: number, callback?: () => void) => {
     n = n < 1 ? 1 : n
     for (let i = 0; i < n; i++) {
       setTimeout(() => {
-        timeoutListRef.current.push(setTimeout(animateLoop, delayRef.current))
+        timeoutListRef.current.push(
+          setTimeout(() => animateLoop(callback), delayRef.current)
+        )
       }, delayRef.current / n * i)
     }
   }
 
-  const animateLoop = () => {
+  const animateLoop = (callback?: () => void) => {
     if (!stepsListQueueRef.current?.length) {
-      return clearState()
+      clearState()
+      if (callback) callback()
+      return
     }
     do {
       const stepList = stepsListQueueRef.current.shift()!
@@ -52,7 +60,9 @@ export const useAnimation = () => {
         gridDivRefs.current[row][col].className = generateClass(row, col, val, instantRef.current)
       })
     } while (instantRef.current && stepsListQueueRef.current.length)
-    timeoutListRef.current.push(setTimeout(animateLoop, delayRef.current))
+    timeoutListRef.current.push(
+      setTimeout(() => animateLoop(callback), delayRef.current)
+    )
   }
 
   const clearState = () => {
@@ -115,7 +125,11 @@ export const useAnimation = () => {
     callAnimateLoop(1)
   }
 
-  const updateGrid = (condition: (value: number) => boolean, newValue: GridValues) => {
+  const updateGrid = (
+    condition: (value: number) => boolean,
+    newValue: GridValues,
+    callback?: () => void,
+  ) => {
     const steps = new SinglyLinkedListQueue<Step[]>()
     const grid = gridRef.current
     const ROWS = grid.length
@@ -132,7 +146,7 @@ export const useAnimation = () => {
       }
       steps.push(arr)
     }
-    animate(steps, 'reset')
+    animate(steps, 'reset', callback)
   }
 
   const clearGrid = () => {
@@ -150,8 +164,8 @@ export const useAnimation = () => {
     }
   }
 
-  const clearVisited = () => {
-    updateGrid((value) => [2, 3].includes(value) && value !== 1, 1)
+  const clearVisited = (callback?: () => void) => {
+    updateGrid((value) => [2, 3].includes(value) && value !== 1, 1, callback)
   }
 
   return {
