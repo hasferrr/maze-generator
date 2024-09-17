@@ -1,6 +1,7 @@
 import { GridValues, PositionXY, Step, StepListQueue } from '../../../types/types'
 import { SinglyLinkedListQueue } from '../../datastructures/queue'
 import { UnionFind } from '../../datastructures/unionFind'
+import { addStartAndEndNode, changeGridValue, getRowsAndCols } from './helper'
 
 interface Edge {
   src: PositionXY
@@ -16,8 +17,7 @@ interface Edge {
 export const kruskal = (grid: GridValues[][]): StepListQueue => {
   const steps: StepListQueue = new SinglyLinkedListQueue()
 
-  const ROWS = grid.length
-  const COLS = grid[0].length
+  const { ROWS, COLS } = getRowsAndCols(grid)
 
   const createKey = (pos: PositionXY) => pos[0] * COLS + pos[1]
 
@@ -66,8 +66,7 @@ export const kruskal = (grid: GridValues[][]): StepListQueue => {
     const { src, dst, edge: [x, y] } = edges[randIndex]
 
     if (uf.union(createKey(src), createKey(dst))) {
-      grid[x][y] = 1
-      steps.push([{ row: x, col: y, val: 1 }])
+      changeGridValue(x, y, 1, grid, steps)
     }
 
     if (edges.length === 1) {
@@ -77,10 +76,6 @@ export const kruskal = (grid: GridValues[][]): StepListQueue => {
     }
   }
 
-  grid[ROWS - 2][1] = 99
-  grid[1][COLS - 2] = 100
-  steps.push([{ row: ROWS - 2, col: 1, val: 99 }])
-  steps.push([{ row: 1, col: COLS - 2, val: 100 }])
-
+  addStartAndEndNode(grid, steps)
   return steps
 }
