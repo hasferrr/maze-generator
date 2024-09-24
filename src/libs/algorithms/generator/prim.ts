@@ -35,7 +35,6 @@ export const prim = (grid: GridValues[][]): StepListQueue => {
     // pick one frontier randomly
     const randIndex = Math.floor(Math.random() * frontiers.length)
     const [x, y] = frontiers[randIndex]
-    changeGridValue(x, y, 1, grid, steps)
 
     // get and push all valid neighbors
     const [frontierNeighbors, passageNeighbors] = getNeighbors(grid, x, y)
@@ -55,6 +54,7 @@ export const prim = (grid: GridValues[][]): StepListQueue => {
     const wallX = (x + nx) / 2
     const wallY = (y + ny) / 2
     changeGridValue(wallX, wallY, 1, grid, steps)
+    changeGridValue(x, y, 1, grid, steps)
   }
 
   addStartAndEndNode(grid, steps)
