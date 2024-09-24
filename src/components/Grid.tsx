@@ -1,14 +1,15 @@
 import { useEffect, useRef, useMemo, useCallback } from 'react'
 import { useGridContext } from '../hooks/useGridContext'
-import { generateClass } from '../utils/generateClass'
 import { useAnimationContext } from '../hooks/useAnimateContext'
 import { findStartEnd } from '../utils/gridUtils'
 import { useDrawContext } from '../hooks/useDrawContext'
+import { useGenerateClass } from '../hooks/useGenerateClass'
 
 const Grid = () => {
   const { gridRef, gridDivRefs } = useGridContext()
   const { inProgressRef } = useAnimationContext()
   const { drawRef } = useDrawContext()
+  const { generateClass } = useGenerateClass()
 
   const isMouseDownRef = useRef(false)
   const isDraggedStartTile = useRef(false)
@@ -40,7 +41,7 @@ const Grid = () => {
         gridDivRefs.current[row][col].className = generateClass(row, col, value)
       }
     }
-  }, [grid, gridDivRefs, drawRef])
+  }, [grid, drawRef, gridDivRefs, generateClass])
 
   const handleMouseDown = useCallback((row: number, col: number) => {
     if (inProgressRef.current) return
@@ -72,7 +73,7 @@ const Grid = () => {
       return
     }
     handleDraw(row, col)
-  }, [grid, gridDivRefs, handleDraw, inProgressRef])
+  }, [generateClass, grid, gridDivRefs, handleDraw, inProgressRef])
 
   return useMemo(() => (
     <div>
@@ -91,7 +92,7 @@ const Grid = () => {
         </div>
       ))}
     </div>
-  ), [cellSize, grid, gridDivRefs, handleMouseDown, handleMouseOver])
+  ), [cellSize, generateClass, grid, gridDivRefs, handleMouseDown, handleMouseOver])
 }
 
 export default Grid

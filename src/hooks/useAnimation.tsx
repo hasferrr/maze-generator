@@ -1,14 +1,15 @@
 import { useState } from 'react'
 import { AnimationType, GridValues, Step, StepListQueue } from '../types/types'
 import { useGridContext } from './useGridContext'
-import { generateClass } from '../utils/generateClass'
 import { SinglyLinkedListQueue } from '../libs/datastructures/queue'
 import { useAnimationContext } from './useAnimateContext'
+import { useGenerateClass } from './useGenerateClass'
 import { findStartEnd } from '../utils/gridUtils'
 
 export const useAnimation = () => {
   const { gridRef, gridDivRefs } = useGridContext()
   const { stepsListQueueRef, inProgress, setInProgress, delayRef, instantRef, timeoutListRef } = useAnimationContext()
+  const { generateClass } = useGenerateClass()
 
   const [multiplier, setMultiplier] = useState(1)
 

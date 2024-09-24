@@ -21,7 +21,7 @@ export const GridContextProvider = ({ children }: { children?: React.ReactNode }
   const [grid, setGrid] = useState<{ current: GridValues[][] }>({ current: createFilledGrid(r, c, 1) })
   const [gridDivs, setGridDivs] = useState<{ current: HTMLDivElement[][] }>({ current: createEmptyGrid(r, c) })
 
-  // Basically, the code above just like implementing normal useRef, but I have SetStateAction:
+  // Basically, the code above just like implementing normal useRef, but we have additional SetStateAction:
   // https://react.dev/learn/referencing-values-with-refs#how-does-use-ref-work-inside
 
   const gridRef = grid

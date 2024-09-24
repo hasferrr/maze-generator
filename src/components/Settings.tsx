@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { Modal, Button, Form, InputGroup, FloatingLabel, OverlayTrigger, Tooltip } from 'react-bootstrap'
 import { useGridContext } from '../hooks/useGridContext'
 import { useAnimation } from '../hooks/useAnimation'
+import { useSettingsContext } from '../hooks/useSettingsContext'
 
 const Settings = ({ show, onHide }: {
   show: boolean
@@ -9,6 +10,7 @@ const Settings = ({ show, onHide }: {
 }) => {
   const { size, setSize } = useGridContext()
   const { clearState } = useAnimation()
+  const { reduceAnimation, setReduceAnimation } = useSettingsContext()
 
   const [tempSize, setTempSize] = useState<number | undefined>(size[0])
   const [ratio, setRatio] = useState<'1:1' | '1:2'>('1:2')
@@ -23,7 +25,12 @@ const Settings = ({ show, onHide }: {
   const handleApply = () => {
     clearState()
     setSize([newSize, newSize * (ratio === '1:1' ? 1 : 2)])
+    setTempSize(newSize)
     onHide()
+  }
+
+  const handleRecudeAnimation = () => {
+    setReduceAnimation(!reduceAnimation)
   }
 
   const sizeInfoTooltip = (() => {
@@ -48,9 +55,9 @@ const Settings = ({ show, onHide }: {
       <Modal.Header closeButton>
         <Modal.Title className="text-lg">Settings</Modal.Title>
       </Modal.Header>
-      <Modal.Body>
-        <Form.Label>Grid Settings</Form.Label>
-        <InputGroup className="mb-3">
+      <Modal.Body className="flex flex-col gap-2">
+        <Form.Label className="mb-0">Grid Settings</Form.Label>
+        <InputGroup>
           <InputGroup.Text className="flex justify-center">Size</InputGroup.Text>
           <InputGroup.Text className="w-20 flex justify-center">
             {newSize * 2 + 1} x {newSize * (ratio === '1:1' ? 1 : 2) * 2 + 1}
@@ -73,6 +80,13 @@ const Settings = ({ show, onHide }: {
             <option value="1:1">1:1</option>
           </Form.Select>
         </FloatingLabel>
+        <Form.Label className="mb-0">Options</Form.Label>
+        <Form.Check
+          type="switch"
+          label="Reduce Animation"
+          checked={reduceAnimation}
+          onClick={handleRecudeAnimation}
+        />
       </Modal.Body>
       <Modal.Footer>
         <Button variant="dark" onClick={handleApply}>Apply</Button>
